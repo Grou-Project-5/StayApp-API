@@ -78,3 +78,18 @@ func (uh *UserHandler) Update(c echo.Context) error {
 	}
 	return c.JSON(helper.SuccessResponse(http.StatusOK, "update profile successfully"))
 }
+
+func (uh *UserHandler) ChangePassword(c echo.Context) error {
+	userID := int(middlewares.ExtractToken(c))
+	passwordInput := ChangePasswordRequest{}
+	if err := c.Bind(&passwordInput); err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	updatePassword := users.Core{}
+	updatePassword.Password = passwordInput.NewPass
+	err := uh.srv.ChangePassword(userID, passwordInput.OldPass, updatePassword)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "changed password successfully"))
+}

@@ -4,6 +4,7 @@ import (
 	"StayApp-API/features/users"
 	"StayApp-API/middlewares"
 	"StayApp-API/utils/helper"
+	"errors"
 	"mime/multipart"
 
 	"github.com/go-playground/validator/v10"
@@ -85,10 +86,33 @@ func (us *userService) Update(userID int, updateUser users.Core, fileHeader *mul
 	return nil
 }
 
-
 // ChangePassword implements users.UserService
-func (*userService) ChangePassword(id int, oldPass string, newPass users.Core) error {
-	panic("unimplemented")
+func (us *userService) ChangePassword(userID int, oldPass string, newPass users.Core) error {
+	if len(newPass.Password) < 3 {
+		return errors.New("your password must be at least 3 characters")
+	}
+	// Get old password from database
+	res, err := us.data.CheckPassword(userID)
+	if err != nil {
+		return err
+	}
+	// Compare old password and new password
+	errCompare := helper.PassCompare(res.Password, oldPass)
+	if errCompare != nil {
+		return errCompare
+	}
+	// Bcrypt new password
+	bcrypt, errBcrypt := helper.PassBcrypt(newPass.Password)
+	if errBcrypt != nil {
+		return errBcrypt
+	}
+	newPass.Password = bcrypt
+	// Update password in database
+	err = us.data.ChangePassword(userID, newPass)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Delete implements users.UserService
