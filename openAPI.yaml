@@ -1,0 +1,445 @@
+openapi: "3.0.3"
+info:
+  title: StayApp
+  version: "1.0"
+  description: |
+    Aplikasi sewa Home Stay.
+servers:
+  - url: http://localhost:8000/v1
+tags:
+  - name: Auth
+  - name: User
+  - name: Room
+  - name: Reservation
+  - name: Feedback
+paths:
+  # ------------------------------------------------
+  # User Path
+  # ------------------------------------------------
+  /login:
+    post:
+      tags:
+        - "Auth"
+      summary: Login user
+      description: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: johndoe@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: johndoe123
+      responses:
+        200:
+          description: Login success and return data user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_login_response"
+        400:
+          $ref: "#/components/responses/error_bad_response"
+        500:
+          $ref: "#/components/responses/error_internal_response"
+
+  /register:
+    post:
+      tags:
+        - "User"
+      summary: Register new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_request"
+      responses:
+        201:
+          description: Success register new user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success register account
+        400:
+          $ref: "#/components/responses/error_bad_response"
+        500:
+          $ref: "#/components/responses/error_internal_response"
+
+  /profile:
+    get:
+      tags:
+        - "User"
+      summary: Get my profile
+      security:
+        - jwt_auth: []
+      responses:
+        200:
+          description: Get profile success and return data user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_response"
+        400:
+          $ref: "#/components/responses/error_bad_response"
+        500:
+          $ref: "#/components/responses/error_internal_response"
+
+  /users/{id}:
+    get:
+      tags:
+        - "User"
+      summary: Get other user by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Success get user by id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_response"
+        400:
+          $ref: "#/components/responses/error_bad_response"
+        404:
+          $ref: "#/components/responses/error_not_found_response"
+        500:
+          $ref: "#/components/responses/error_internal_response"
+  /users:
+    put:
+      tags:
+        - "User"
+      summary: Update profile
+      description: Update
+      security:
+        - jwt_auth: []
+      requestBody:
+        content:
+          application/form-data:
+            schema:
+              $ref: "#/components/schemas/user_update_request"
+      responses:
+        200:
+          description: Success update user data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success update profile
+        400:
+          $ref: "#/components/responses/error_bad_response"
+        500:
+          $ref: "#/components/responses/error_internal_response"
+    delete:
+      tags:
+        - "User"
+      summary: Delete account
+      description: Delete
+      security:
+        - jwt_auth: []
+      responses:
+        200:
+          description: Success delete user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success delete user account
+        400:
+          $ref: "#/components/responses/error_bad_response"
+        500:
+          $ref: "#/components/responses/error_internal_response"
+  /password:
+    put:
+      tags:
+        - "User"
+      summary: Update password
+      security:
+        - jwt_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                old_password:
+                  type: string
+                  format: password
+                  example: alta
+                new_password:
+                  type: string
+                  format: password
+                  example: golang
+      responses:
+        200:
+          description: Success update user data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success update password
+        400:
+          $ref: "#/components/responses/error_bad_response"
+        500:
+          $ref: "#/components/responses/error_internal_response"
+  
+components:
+  securitySchemes:
+    jwt_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "Use token for authorization"
+  schemas:
+    ## USER SCHEMAS
+    user_request:
+      type: object
+      properties:
+        name:
+          type: string
+          example: john doe
+        email:
+          type: string
+          format: email
+          example: johndoe@gmail.com
+        password:
+          type: string
+          format: password
+          example: johndoe123
+        address:
+          type: string
+          example: Indonesia
+        phone:
+          type: string
+          example: 081234567890
+        gender:
+          type: string
+          example: male
+    user_update_request:
+      type: object
+      properties:
+        name:
+          type: string
+          example: john doe
+        email:
+          type: string
+          format: email
+          example: johndoe@gmail.com
+        address:
+          type: string
+          example: Indonesia
+        phone:
+          type: string
+          example: 081234567890
+        gender:
+          type: string
+          example: male
+        pictures:
+          type: string
+          example: pictures.jpg
+    user_login_response:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: john doe
+            avatar:
+              type: string
+              example: avatar.jpg
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2Nzg4MDMwNDksInVzZXJJZCI6MX0.Gen6jj5EbiLRz2Jx-z7_dKJ0OsW5bZYUmJqtpgwnf2U
+        message:
+          type: string
+          example: login success
+    user_response:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: john doe
+            email:
+              type: string
+              format: email
+              example: johndoe@gmail.com
+            address:
+              type: string
+              example: Indonesia
+            phone:
+              type: string
+              example: 081234567890
+            gender:
+              type: string
+              example: male
+            pictures:
+              type: string
+              example: pictures.jpg
+        message:
+          type: string
+          example: success show profile
+  
+    # POST SCHEMAS
+    post_by_id_response:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            caption:
+              type: string
+            image:
+              type: string
+            author:
+              type: string
+            avatar:
+              type: string
+            created_at:
+              type: string
+            updated_at:
+              type: string
+    list_post_response:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              caption:
+                type: string
+              image:
+                type: string
+              author:
+                type: string
+              avatar:
+                type: string
+              created_at:
+                type: string
+              updated_at:
+                type: string
+    list_post_by_id_response:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              caption:
+                type: string
+              image:
+                type: string
+              created_at:
+                type: string
+              updated_at:
+                type: string
+    # COMMENT SCHEMAS
+    list_comment_response:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              first_name:
+                type: string
+              comment:
+                type: string
+              created_at:
+                type: string
+  requestBodies:
+    # POST REQUEST
+    post_request:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              caption:
+                type: string
+                example: "Capek one piece ga tamat-tamat"
+              image:
+                type: string
+                format: binary
+  responses:
+    ## ERROR RESPONSE
+    error_bad_response:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: bad request
+    error_not_found_response:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: data not found
+    error_internal_response:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: server error
