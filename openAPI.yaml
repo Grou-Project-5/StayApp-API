@@ -1,27 +1,83 @@
-openapi: "3.0.3"
+openapi: 3.0.3
 info:
-  title: StayApp
-  version: "1.0"
-  description: |
-    Aplikasi sewa Home Stay.
+  title: Air Bnb Project
+  description: This is API for Air Bnb Project
+  version: "1.0.0"
+  contact:
+    email: adiyudapranata@gmail.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+
 servers:
-  - url: http://localhost:8000/v1
-tags:
-  - name: Auth
-  - name: User
-  - name: Room
-  - name: Reservation
-  - name: Feedback
+  # Added by API Auto Mocking Plugin
+  # Added by API Auto Mocking Plugin
+  # Added by API Auto Mocking Plugin
+  # Added by API Auto Mocking Plugin
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/ADIYUDAPRANATA/Dashboard/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/ADIYUDAPRANATA/Dashboard/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/ADIYUDAPRANATA/Dashboard/1.0.0
+
 paths:
-  # ------------------------------------------------
-  # User Path
-  # ------------------------------------------------
+  /register:
+    post:
+      tags:
+        - "Auth"
+      description: register feature for new users
+      summary: register feature for new users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                phone:
+                  type: string
+                address:
+                  type: string
+                gender:
+                  type: string
+                password:
+                  type: string
+                  format: password
+            example:
+              name: "Adi Yuda Pranata"
+              email: "adiyudapranata@gmail.com"
+              phone: "0813456"
+              address: "Malang Jawa Timur"
+              gender: "Male"
+              password: "123"
+      responses:
+        201:
+          description: "success insert data"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "success create account"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
   /login:
     post:
       tags:
         - "Auth"
-      summary: Login user
-      description: Login
+      description: login feature for users
+      summary: login feature for users
       requestBody:
         content:
           application/json:
@@ -31,36 +87,30 @@ paths:
                 email:
                   type: string
                   format: email
-                  example: johndoe@gmail.com
                 password:
                   type: string
                   format: password
-                  example: johndoe123
+            example:
+              email: "adiyudapranata@gmail.com"
+              password: "123"
       responses:
         200:
-          description: Login success and return data user
+          description: "login success"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/user_login_response"
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  id: 1
+                  name: "Adi Yuda Pranata"
+                  pictures: "pictures.jpg"
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJ1c2VySUQiOjR9.QTZxERh4CwC_UnL_eJvTi_A_qdLeBZ-IjR4nqoxjodk"
+                message: "login success"
         400:
-          $ref: "#/components/responses/error_bad_response"
-        500:
-          $ref: "#/components/responses/error_internal_response"
-
-  /register:
-    post:
-      tags:
-        - "User"
-      summary: Register new user
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/user_request"
-      responses:
-        201:
-          description: Success register new user
+          $ref: "#/components/responses/400"
+        404:
+          description: data not found
           content:
             application/json:
               schema:
@@ -68,31 +118,138 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: success register account
-        400:
-          $ref: "#/components/responses/error_bad_response"
+                example:
+                  message: "account not registered"
         500:
-          $ref: "#/components/responses/error_internal_response"
-
-  /profile:
+          $ref: "#/components/responses/500"
+  /users:
     get:
       tags:
         - "User"
-      summary: Get my profile
+      description: get my profile
+      summary: get my profile
       security:
-        - jwt_auth: []
+        - JWTAuth: []
       responses:
         200:
-          description: Get profile success and return data user
+          description: success show user profile
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/user_response"
+                type: object
+              example:
+                data:
+                  id: 1
+                  name: "Adi Yuda Pranata"
+                  email: "adiyudapranata@gmail.com"
+                  address: "Malang Jawa Timur"
+                  phone: "0813456"
+                  gender: "Male"
+                  pictures: "pictures.jpg"
+                message: "success show profile"
         400:
-          $ref: "#/components/responses/error_bad_response"
+          $ref: "#/components/responses/400"
         500:
-          $ref: "#/components/responses/error_internal_response"
-
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - "User"
+      description: edit my profile
+      summary: edit my profile
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                pictures:
+                  type: string
+                  format: binary
+            example:
+              pictures: "pictures.jpg"
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                phone:
+                  type: string
+                address:
+                  type: string
+                gender:
+                  type: string
+            example:
+              name: "Adi Yuda Pranata"
+              email: "adiyudapranata@gmail.com"
+              phone: "0813456"
+              address: "Malang Jawa Timur"
+              gender: "Male"
+      responses:
+        200:
+          description: success update user profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "success update user profile"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          description: data not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "data not found"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - "User"
+      description: deactivate user
+      summary: deactivate user
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: success deactivate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "succes deactivate"
+        404:
+          description: data not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "data not found"
+        500:
+          $ref: "#/components/responses/500"
   /users/{id}:
     get:
       tags:
@@ -106,74 +263,31 @@ paths:
             type: integer
       responses:
         200:
-          description: Success get user by id
+          description: success show user profile
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/user_response"
+                type: object
+              example:
+                data:
+                  id: 1
+                  name: "Adi Yuda Pranata"
+                  address: "Malang Jawa Timur"
+                  pictures: "pictures.jpg"
+                message: "success show profile"
         400:
-          $ref: "#/components/responses/error_bad_response"
+          $ref: "#/components/responses/400"
         404:
-          $ref: "#/components/responses/error_not_found_response"
+          $ref: "#/components/responses/404"
         500:
-          $ref: "#/components/responses/error_internal_response"
-  /users:
-    put:
-      tags:
-        - "User"
-      summary: Update profile
-      description: Update
-      security:
-        - jwt_auth: []
-      requestBody:
-        content:
-          application/form-data:
-            schema:
-              $ref: "#/components/schemas/user_update_request"
-      responses:
-        200:
-          description: Success update user data
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: success update profile
-        400:
-          $ref: "#/components/responses/error_bad_response"
-        500:
-          $ref: "#/components/responses/error_internal_response"
-    delete:
-      tags:
-        - "User"
-      summary: Delete account
-      description: Delete
-      security:
-        - jwt_auth: []
-      responses:
-        200:
-          description: Success delete user
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: success delete user account
-        400:
-          $ref: "#/components/responses/error_bad_response"
-        500:
-          $ref: "#/components/responses/error_internal_response"
+          $ref: "#/components/responses/500"
   /password:
     put:
       tags:
         - "User"
       summary: Update password
       security:
-        - jwt_auth: []
+        - JWTAuth: []
       requestBody:
         content:
           application/json:
@@ -183,14 +297,14 @@ paths:
                 old_password:
                   type: string
                   format: password
-                  example: alta
+                  example: "123"
                 new_password:
                   type: string
                   format: password
-                  example: golang
+                  example: "1234"
       responses:
         200:
-          description: Success update user data
+          description: success
           content:
             application/json:
               schema:
@@ -198,223 +312,754 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: success update password
+              example:
+                message: "succes update password"
+        403:
+          description: password do not match
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "password do not match"
         400:
-          $ref: "#/components/responses/error_bad_response"
+          $ref: "#/components/responses/400"
         500:
-          $ref: "#/components/responses/error_internal_response"
-  
+          $ref: "#/components/responses/500"
+  ####################################
+  #  ROOM
+  ####################################
+  /rooms:
+    get:
+      tags:
+        - Room
+      summary: List all Room
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get all room"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  [
+                    {
+                      id: 1,
+                      "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      "user_id": 1,
+                      "room_name": "Kimi Homestay",
+                      "price": 250000,
+                      "special_access": "string",
+                      "location": "Malang",
+                      "stats": "Available",
+                    },
+                    {
+                      id: 2,
+                      "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      "user_id": 2,
+                      "room_name": "Ken's Homestay",
+                      "price": 250000,
+                      "special_access": "string",
+                      "location": "Batu",
+                      "stats": "Not Available",
+                    },
+                  ]
+                message: "success show all room"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    post:
+      tags:
+        - Room
+      summary: Create a new room
+      security:
+        - JWTAuth: []
+      requestBody:
+        description: The room to create
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                room_picture:
+                  type: string
+                  format: binary
+                room_name:
+                  type: string
+                  description: Room name
+                price:
+                  type: integer
+                  description: Price room per day
+                description:
+                  type: string
+                  description: description
+                location:
+                  type: string
+                  description: location
+                max_visitors:
+                  type: integer
+                  description: max visitors
+                special_access:
+                  type: string
+                  description: special access
+                bedroom:
+                  type: integer
+                  description: bedroom
+                room:
+                  type: integer
+                  description: room
+                kitchen:
+                  type: string
+                  description: kitchen
+                wifi:
+                  type: string
+                  description: wifi
+                garage:
+                  type: string
+                  description: garage
+                excellent_features:
+                  type: string
+                  description: excellent features
+                cleaning_fee:
+                  type: integer
+                  description: cleaning fee per day
+                service_fee:
+                  type: integer
+                  description: service fee per day
+                bring_animal:
+                  type: string
+                  description: allowed or not
+                check_in:
+                  type: string
+                  description: time of check in
+                check_out:
+                  type: string
+                  description: time of check out
+                take_photo:
+                  type: string
+                  description: allowed or not
+                other:
+                  type: string
+                  description: other rules
+            example:
+              room_picture: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+              user_id: 1
+              room_name: "Villa Bali Green"
+              price: 250000
+              description: "string"
+              location: "Malang Jawa Timur"
+              max_visitors: 7
+              special_access: "string"
+              bedroom: 3
+              room: 2
+              kitchen: "string"
+              wifi: "string"
+              garage: "string"
+              excellent_features: "string"
+              cleaning_fee: 50000
+              service_fee: 50000
+              bring_animal: "string"
+              check_in: "string"
+              check_out: "string"
+              take_photo: "string"
+              other: "string"
+
+      responses:
+        201:
+          description: "success insert data"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "success post a room"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+  /rooms/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: The ID of the room to retrieve or update
+        schema:
+          type: integer
+    get:
+      tags:
+        - Room
+      summary: Get a room by ID
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get room details"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  id: 1
+                  "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+                  "user_id": 1
+                  "room_name": "Villa Bali Green"
+                  "price": 250000
+                  "description": "string"
+                  "location": "Malang Jawa Timur"
+                  "max_visitors": 7
+                  "special_access": "string"
+                  "bedroom": 3
+                  "room": 2
+                  "kitchen": "string"
+                  "wifi": "string"
+                  "garage": "string"
+                  "excellent_features": "string"
+                  "cleaning_fee": 50000
+                  "service_fee": 50000
+                  "bring_animal": "string"
+                  "check_in": "string"
+                  "check_out": "string"
+                  "take_photo": "string"
+                  "other": "string"
+                message: "success get room details"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - Room
+      summary: Update a room by ID
+      security:
+        - JWTAuth: []
+      requestBody:
+        description: The updated room
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                room_picture:
+                  type: string
+                  format: binary
+            example:
+              room_picture: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: ID from user
+                room_name:
+                  type: string
+                  description: Room name
+                price:
+                  type: integer
+                  description: Price room per day
+                description:
+                  type: string
+                  description: description
+                location:
+                  type: string
+                  description: location
+                max_visitors:
+                  type: integer
+                  description: max visitors
+                special_access:
+                  type: string
+                  description: special access
+                bedroom:
+                  type: integer
+                  description: bedroom
+                room:
+                  type: integer
+                  description: room
+                kitchen:
+                  type: string
+                  description: kitchen
+                wifi:
+                  type: string
+                  description: wifi
+                garage:
+                  type: string
+                  description: garage
+                excellent_features:
+                  type: string
+                  description: excellent features
+                cleaning_fee:
+                  type: integer
+                  description: cleaning fee per day
+                service_fee:
+                  type: integer
+                  description: service fee per day
+                bring_animal:
+                  type: string
+                  description: allowed or not
+                check_in:
+                  type: string
+                  description: time of check in
+                check_out:
+                  type: string
+                  description: time of check out
+                take_photo:
+                  type: string
+                  description: allowed or not
+                other:
+                  type: string
+                  description: other rules
+      responses:
+        200:
+          description: success update room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  id: 1
+                  "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+                  "user_id": 1
+                  "room_name": "Villa Bali Green"
+                  "price": 250000
+                  "description": "string"
+                  "location": "Malang Jawa Timur"
+                  "max_visitors": 7
+                  "special_access": "string"
+                  "bedroom": 3
+                  "room": 2
+                  "kitchen": "string"
+                  "wifi": "string"
+                  "garage": "string"
+                  "excellent_features": "string"
+                  "cleaning_fee": 50000
+                  "service_fee": 50000
+                  "bring_animal": "string"
+                  "check_in": "string"
+                  "check_out": "string"
+                  "take_photo": "string"
+                  "other": "string"
+                message: "success update room"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          description: data not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "data not found"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Room
+      description: delete room by room id
+      summary: delete room by room id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: success delete room
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "success delete room"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          description: data not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "data not found"
+        500:
+          $ref: "#/components/responses/500"
+  /users/rooms:
+    get:
+      tags:
+        - Room
+      summary: get all user room
+      description: get all user room
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: success get all user room
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  [
+                    {
+                      "id": 1,
+                      "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      "user_id": 1,
+                      "room_name": "Kimi Homestay",
+                      "price": 250000,
+                      "description": "string",
+                      "location": "Malang Jawa Timur",
+                    },
+                    {
+                      "id": 2,
+                      "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      "user_id": 1,
+                      "room_name": "Kimi2 Homestay",
+                      "price": 250000,
+                      "description": "string",
+                      "location": "Batu Jawa Timur",
+                    },
+                  ]
+                message: "success get all user room"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+  /reservations/check:
+    post:
+      tags:
+        - Reservations
+      summary: "Create Reservation"
+      description: "Create New Reservation"
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                room_id:
+                  type: integer
+                date_start:
+                  type: string
+                date_end:
+                  type: string
+            example:
+              room_id: 1
+              date_start: "2023-03-13"
+              date_end: "2023-03-17"
+      responses:
+        201:
+          description: "success check reservation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  room_id: 1
+                  date_start: "2023-03-13"
+                  date_end: "2023-03-17"
+                message: "success check reservation"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+  /reservations:
+    post:
+      tags:
+        - Reservations
+      summary: "Create reservation payment"
+      description: "Insert data payment for reservation"
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reservation"
+            example:
+              room_id: 1
+              date_start: "2023-03-15"
+              date_end: "2023-03-17"
+              duration: 2
+              total_price: 4000000
+              name: "yuda"
+              card_number: "0230 4321 9518 6659"
+              cvv: "889"
+              month: "mei"
+              year: "2024"
+      responses:
+        200:
+          description: "success create reservation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                message: "success create reservation"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    get:
+      tags:
+        - Reservations
+      summary: "Get all data reservation from user"
+      description: "get all your data reservation"
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "success get user reservation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  - room_id: 1
+                    room_name: "Kimi Homestay"
+                    date_start: "2023-03-15"
+                    date_end: "2023-03-17"
+                    address: "Malang"
+                    total_price: 4000000
+                  - room_id: 1
+                    room_name: "Kimi Homestay"
+                    date_start: "2023-03-15"
+                    date_end: "2023-03-17"
+                    address: "Malang"
+                    total_price: 4000000
+                message: "sucess get user reservation"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+  /feedbacks:
+    post:
+      tags:
+        - Feedbacks
+      summary: create feedback
+      description: create feedback
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Feedback"
+            example:
+              room_id: 1
+              rating: "*****"
+              feedback: "sangat nyaman dan memuaskan"
+      responses:
+        201:
+          description: "success insert data"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "success add feedback"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+####################################
+#  COMPONENT
+####################################
 components:
   securitySchemes:
-    jwt_auth:
+    JWTAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: "Use token for authorization"
   schemas:
-    ## USER SCHEMAS
-    user_request:
+    responseObject:
       type: object
       properties:
+        data:
+          type: object
+        message:
+          type: string
+
+    Reservation:
+      type: object
+      required:
+        - room_id
+        - payment_id
+        - date_start
+        - date_end
+        - duration
+        - total_price
+        - status
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the reservation
+        room_id:
+          type: integer
+          format: int64
+          description: The ID of the Room
+        payment_id:
+          type: integer
+          format: int64
+          description: The ID of the Payment
+        date_start:
+          type: string
+          format: date
+          description: Start date
+        date_end:
+          type: string
+          format: date
+          description: End date
+        status:
+          type: string
+          description: Accept,Cancel,Done
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time the team was created
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time the team was last updated
+        deleted_at:
+          type: string
+          format: date-time
+          description: The date and time the team was deleted
+
+    Payment:
+      type: object
+      required:
+        - type
+        - name
+        - number
+        - cvv
+        - month
+        - year
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the reservation
+        type:
+          type: string
+          description: type
         name:
           type: string
-          example: john doe
-        email:
+          description: name
+        number:
           type: string
-          format: email
-          example: johndoe@gmail.com
-        password:
+          description: type
+        cvv:
           type: string
-          format: password
-          example: johndoe123
-        address:
+          description: name
+        month:
           type: string
-          example: Indonesia
-        phone:
+          description: type
+        year:
           type: string
-          example: 081234567890
-        gender:
+          description: name
+        created_at:
           type: string
-          example: male
-    user_update_request:
+          format: date-time
+          description: The date and time the team was created
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time the team was last updated
+        deleted_at:
+          type: string
+          format: date-time
+          description: The date and time the team was deleted
+
+    Feedback:
       type: object
+      required:
+        - reservation_id
+        - room_id
+        - rating
+        - feedback
       properties:
-        name:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the Feedback
+        reservation_id:
+          type: integer
+          format: int64
+          description: The ID of the Reservation
+        room_id:
+          type: integer
+          format: int64
+          description: The ID of the Room
+        rating:
           type: string
-          example: john doe
-        email:
+          description: type
+        feedback:
           type: string
-          format: email
-          example: johndoe@gmail.com
-        address:
+          description: name
+        created_at:
           type: string
-          example: Indonesia
-        phone:
+          format: date-time
+          description: The date and time the team was created
+        updated_at:
           type: string
-          example: 081234567890
-        gender:
+          format: date-time
+          description: The date and time the team was last updated
+        deleted_at:
           type: string
-          example: male
-        pictures:
-          type: string
-          example: pictures.jpg
-    user_login_response:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            id:
-              type: integer
-              example: 1
-            name:
-              type: string
-              example: john doe
-            avatar:
-              type: string
-              example: avatar.jpg
-        token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2Nzg4MDMwNDksInVzZXJJZCI6MX0.Gen6jj5EbiLRz2Jx-z7_dKJ0OsW5bZYUmJqtpgwnf2U
-        message:
-          type: string
-          example: login success
-    user_response:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            id:
-              type: integer
-              example: 1
-            name:
-              type: string
-              example: john doe
-            email:
-              type: string
-              format: email
-              example: johndoe@gmail.com
-            address:
-              type: string
-              example: Indonesia
-            phone:
-              type: string
-              example: 081234567890
-            gender:
-              type: string
-              example: male
-            pictures:
-              type: string
-              example: pictures.jpg
-        message:
-          type: string
-          example: success show profile
-  
-    # POST SCHEMAS
-    post_by_id_response:
-      type: object
-      properties:
-        message:
-          type: string
-        data:
-          type: object
-          properties:
-            id:
-              type: integer
-            caption:
-              type: string
-            image:
-              type: string
-            author:
-              type: string
-            avatar:
-              type: string
-            created_at:
-              type: string
-            updated_at:
-              type: string
-    list_post_response:
-      type: object
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-              caption:
-                type: string
-              image:
-                type: string
-              author:
-                type: string
-              avatar:
-                type: string
-              created_at:
-                type: string
-              updated_at:
-                type: string
-    list_post_by_id_response:
-      type: object
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-              caption:
-                type: string
-              image:
-                type: string
-              created_at:
-                type: string
-              updated_at:
-                type: string
-    # COMMENT SCHEMAS
-    list_comment_response:
-      type: object
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-              first_name:
-                type: string
-              comment:
-                type: string
-              created_at:
-                type: string
-  requestBodies:
-    # POST REQUEST
-    post_request:
-      content:
-        multipart/form-data:
-          schema:
-            type: object
-            properties:
-              caption:
-                type: string
-                example: "Capek one piece ga tamat-tamat"
-              image:
-                type: string
-                format: binary
+          format: date-time
+          description: The date and time the team was deleted
+
   responses:
-    ## ERROR RESPONSE
-    error_bad_response:
-      description: Bad Request
+    204:
+      description: Delete data success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+          example:
+            status: true
+            message: "Delete data success"
+            data: []
+
+    400:
+      description: "error from user"
       content:
         application/json:
           schema:
@@ -422,9 +1067,38 @@ components:
             properties:
               message:
                 type: string
-                example: bad request
-    error_not_found_response:
-      description: Not found
+          example:
+            message: "bad request"
+    401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+          example:
+            status: false
+            message: "request does not contain a valid token"
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+          example:
+            message: "data not found"
+
+    500:
+      description: "error from server"
       content:
         application/json:
           schema:
@@ -432,14 +1106,5 @@ components:
             properties:
               message:
                 type: string
-                example: data not found
-    error_internal_response:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: server error
+          example:
+            message: "internal server error"
