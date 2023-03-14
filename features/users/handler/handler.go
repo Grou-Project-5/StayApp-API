@@ -33,3 +33,17 @@ func (uh *UserHandler) Register(c echo.Context) error {
 	}
 	return c.JSON(helper.SuccessResponse(http.StatusCreated, "register successfully"))
 }
+
+func (uh *UserHandler) Login(c echo.Context) error {
+	loginInput := LoginRequest{}
+	if err := c.Bind(&loginInput); err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	token, data, err := uh.srv.Login(loginInput.Email, loginInput.Password)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	res := MiniResponse{}
+	copier.Copy(&res, &data)
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "login successfully", res, token))
+}

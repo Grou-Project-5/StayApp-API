@@ -2,6 +2,7 @@ package data
 
 import (
 	"StayApp-API/features/users"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -26,6 +27,19 @@ func (uq *userQuery) Register(newUser users.Core) error {
 	return nil
 }
 
+// Login implements users.UserData
+func (uq *userQuery) Login(email string) (users.Core, error) {
+	tmp := User{}
+	tx := uq.db.Where("email = ?", email).First(&tmp)
+	if tx.RowsAffected < 1 {
+		return users.Core{}, errors.New("email not found")
+	}
+	if tx.Error != nil {
+		return users.Core{}, tx.Error
+	}
+	return UserToCore(tmp), nil
+}
+
 // ChangePassword implements users.UserData
 func (*userQuery) ChangePassword(id int, newPass users.Core) error {
 	panic("unimplemented")
@@ -38,11 +52,6 @@ func (*userQuery) CheckPassword(id int) (users.Core, error) {
 
 // Delete implements users.UserData
 func (*userQuery) Delete(id int) error {
-	panic("unimplemented")
-}
-
-// Login implements users.UserData
-func (*userQuery) Login(email string) (users.Core, error) {
 	panic("unimplemented")
 }
 

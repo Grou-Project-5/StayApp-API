@@ -2,6 +2,7 @@ package service
 
 import (
 	"StayApp-API/features/users"
+	"StayApp-API/middlewares"
 	"StayApp-API/utils/helper"
 	"mime/multipart"
 
@@ -40,6 +41,24 @@ func (us *userService) Register(newUser users.Core) error {
 	return nil
 }
 
+// Login implements users.UserService
+func (us *userService) Login(email string, password string) (string, users.Core, error) {
+	tmp, err := us.data.Login(email)
+	if err != nil {
+		return "", users.Core{}, err
+	}
+	// Compare password
+	if err := helper.PassCompare(tmp.Password, password); err != nil {
+		return "", users.Core{}, err
+	}
+	// Generate token
+	token, err := middlewares.CreateToken(tmp.Id)
+	if err != nil {
+		return "", users.Core{}, err
+	}
+	return token, tmp, nil
+}
+
 // ChangePassword implements users.UserService
 func (*userService) ChangePassword(id int, oldPass string, newPass users.Core) error {
 	panic("unimplemented")
@@ -47,11 +66,6 @@ func (*userService) ChangePassword(id int, oldPass string, newPass users.Core) e
 
 // Delete implements users.UserService
 func (*userService) Delete(id int) error {
-	panic("unimplemented")
-}
-
-// Login implements users.UserService
-func (*userService) Login(email string, password string) (string, users.Core, error) {
 	panic("unimplemented")
 }
 
