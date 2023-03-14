@@ -68,6 +68,24 @@ func (us *userService) MyProfile(userID int) (users.Core, error) {
 	return tmp, nil
 }
 
+// Update implements users.UserService
+func (us *userService) Update(userID int, updateUser users.Core, fileHeader *multipart.FileHeader) error {
+	if fileHeader != nil {
+		file, _ := fileHeader.Open()
+		uploadURL, err := helper.UploadFile(file, "/users")
+		if err != nil {
+			return err
+		}
+		updateUser.Pictures = uploadURL[0]
+	}
+	err := us.data.Update(userID, updateUser)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+
 // ChangePassword implements users.UserService
 func (*userService) ChangePassword(id int, oldPass string, newPass users.Core) error {
 	panic("unimplemented")
@@ -75,11 +93,6 @@ func (*userService) ChangePassword(id int, oldPass string, newPass users.Core) e
 
 // Delete implements users.UserService
 func (*userService) Delete(id int) error {
-	panic("unimplemented")
-}
-
-// Update implements users.UserService
-func (*userService) Update(id int, updateUser users.Core, file *multipart.FileHeader) error {
 	panic("unimplemented")
 }
 

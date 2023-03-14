@@ -59,3 +59,22 @@ func (uh *UserHandler) MyProfile(c echo.Context) error {
 	copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, "profile successfully displayed", res))
 }
+
+func (uh *UserHandler) Update(c echo.Context) error {
+	userID := int(middlewares.ExtractToken(c))
+	updateInput := UpdateRequest{}
+	if err := c.Bind(&updateInput); err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	file, errFile := c.FormFile("pictures")
+	if errFile != nil {
+		return errFile
+	}
+	updateUser := users.Core{}
+	copier.Copy(&updateUser, &updateInput)
+	err := uh.srv.Update(userID, updateUser, file)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "update profile successfully"))
+}

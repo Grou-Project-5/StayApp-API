@@ -40,7 +40,6 @@ func (uq *userQuery) Login(email string) (users.Core, error) {
 	return UserToCore(tmp), nil
 }
 
-
 // Profile implements users.UserData
 func (uq *userQuery) MyProfile(userID int) (users.Core, error) {
 	tmp := User{}
@@ -52,6 +51,19 @@ func (uq *userQuery) MyProfile(userID int) (users.Core, error) {
 		return users.Core{}, tx.Error
 	}
 	return UserToCore(tmp), nil
+}
+
+// Update implements users.UserData
+func (uq *userQuery) Update(userID int, updateUser users.Core) error {
+	data := CoreToUser(updateUser)
+	tx := uq.db.Model(&User{}).Where("id = ?", userID).Updates(&data)
+	if tx.RowsAffected < 1 {
+		return errors.New("profile no updated")
+	}
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
 }
 
 // ChangePassword implements users.UserData
@@ -66,11 +78,6 @@ func (*userQuery) CheckPassword(id int) (users.Core, error) {
 
 // Delete implements users.UserData
 func (*userQuery) Delete(id int) error {
-	panic("unimplemented")
-}
-
-// Update implements users.UserData
-func (*userQuery) Update(id int, updateUser users.Core) error {
 	panic("unimplemented")
 }
 
