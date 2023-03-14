@@ -12,6 +12,7 @@ import (
 func main() {
 	cfg := config.InitConfig()
 	db := database.InitDBMySql(*cfg)
+	database.InitialMigration(db)
 
 	e := echo.New()
 	e.Use(middleware.CORS())
