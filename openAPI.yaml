@@ -104,10 +104,9 @@ paths:
                 data:
                   id: 1
                   name: "Adi Yuda Pranata"
-                  email: "adiyudapranata@gmail.com"
-                  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJ1c2VySUQiOjR9.QTZxERh4CwC_UnL_eJvTi_A_qdLeBZ-IjR4nqoxjodk"
+                  pictures: "pictures.jpg"
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJ1c2VySUQiOjR9.QTZxERh4CwC_UnL_eJvTi_A_qdLeBZ-IjR4nqoxjodk"
                 message: "login success"
-
         400:
           $ref: "#/components/responses/400"
         404:
@@ -123,20 +122,14 @@ paths:
                   message: "account not registered"
         500:
           $ref: "#/components/responses/500"
-  /users/{user_id}:
+  /users:
     get:
       tags:
         - "User"
-      description: get user profile
-      summary: get user profile
+      description: get my profile
+      summary: get my profile
       security:
         - JWTAuth: []
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          schema:
-            type: integer
       responses:
         200:
           description: success show user profile
@@ -147,11 +140,12 @@ paths:
               example:
                 data:
                   id: 1
-                  profile_picture: "https://fauziawsbucket.s3.ap-southeast-1.amazonaws.com/559d75ff-88c8-40af-8740-233667b36feco.png"
                   name: "Adi Yuda Pranata"
                   email: "adiyudapranata@gmail.com"
-                  phone: "0813456"
                   address: "Malang Jawa Timur"
+                  phone: "0813456"
+                  gender: "Male"
+                  pictures: "pictures.jpg"
                 message: "success show profile"
         400:
           $ref: "#/components/responses/400"
@@ -160,16 +154,10 @@ paths:
     put:
       tags:
         - "User"
-      description: edit user profile
-      summary: edit user profile
+      description: edit my profile
+      summary: edit my profile
       security:
         - JWTAuth: []
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          schema:
-            type: integer
       requestBody:
         required: true
         content:
@@ -177,11 +165,11 @@ paths:
             schema:
               type: object
               properties:
-                profile_picture:
+                pictures:
                   type: string
                   format: binary
             example:
-              profile_picture: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+              pictures: "pictures.jpg"
           application/json:
             schema:
               type: object
@@ -195,31 +183,25 @@ paths:
                   type: string
                 address:
                   type: string
-                password:
+                gender:
                   type: string
-                  format: password
             example:
               name: "Adi Yuda Pranata"
               email: "adiyudapranata@gmail.com"
               phone: "0813456"
               address: "Malang Jawa Timur"
-              password: "1234"
+              gender: "Male"
       responses:
         200:
           description: success update user profile
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/responseObject"
+                type: object
+                properties:
+                  message:
+                    type: string
               example:
-                data:
-                  id: 1
-                  profile_picture: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
-                  name: "Adi Yuda Pranata"
-                  email: "adiyudapranata@gmail.com"
-                  phone: "0813456"
-                  address: "Malang Jawa Timur"
-                  password: "1234"
                 message: "success update user profile"
         400:
           $ref: "#/components/responses/400"
@@ -243,12 +225,6 @@ paths:
       summary: deactivate user
       security:
         - JWTAuth: []
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          schema:
-            type: integer
       responses:
         200:
           description: success deactivate
@@ -274,7 +250,85 @@ paths:
                   message: "data not found"
         500:
           $ref: "#/components/responses/500"
-
+  /users/{id}:
+    get:
+      tags:
+        - "User"
+      summary: Get other user by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: success show user profile
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  id: 1
+                  name: "Adi Yuda Pranata"
+                  address: "Malang Jawa Timur"
+                  pictures: "pictures.jpg"
+                message: "success show profile"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /password:
+    put:
+      tags:
+        - "User"
+      summary: Update password
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                old_password:
+                  type: string
+                  format: password
+                  example: "123"
+                new_password:
+                  type: string
+                  format: password
+                  example: "1234"
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "succes update password"
+        403:
+          description: password do not match
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "password do not match"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
   ####################################
   #  ROOM
   ####################################
@@ -303,7 +357,7 @@ paths:
                       "price": 250000,
                       "special_access": "string",
                       "location": "Malang",
-                      "stats": "Available"
+                      "stats": "Available",
                     },
                     {
                       id: 2,
@@ -313,7 +367,7 @@ paths:
                       "price": 250000,
                       "special_access": "string",
                       "location": "Batu",
-                      "stats": "Not Available"
+                      "stats": "Not Available",
                     },
                   ]
                 message: "success show all room"
@@ -417,7 +471,7 @@ paths:
               check_out: "string"
               take_photo: "string"
               other: "string"
-          
+
       responses:
         201:
           description: "success insert data"
@@ -855,7 +909,6 @@ components:
           type: object
         message:
           type: string
-    
 
     Reservation:
       type: object
@@ -1042,7 +1095,6 @@ components:
               message:
                 type: string
           example:
-            status: false
             message: "data not found"
 
     500:
