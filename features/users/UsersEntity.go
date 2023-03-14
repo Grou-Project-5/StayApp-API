@@ -3,7 +3,7 @@ package users
 import "mime/multipart"
 
 type Core struct {
-	ID       int
+	Id       uint
 	Name     string `validate:"required"`
 	Email    string `validate:"required,email"`
 	Password string `validate:"required,min=3"`
