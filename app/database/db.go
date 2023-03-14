@@ -1,8 +1,10 @@
 package database
 
 import (
-	"fmt"
 	"StayApp-API/app/config"
+	users "StayApp-API/features/users/data"
+	rooms "StayApp-API/features/rooms/data"
+	"fmt"
 	"log"
 
 	"gorm.io/driver/mysql"
@@ -25,4 +27,10 @@ func InitDBMySql(cfg config.AppConfig) *gorm.DB {
 		return nil
 	}
 	return db
+}
+
+func InitialMigration(db *gorm.DB) {
+	db.AutoMigrate(&users.User{})
+	db.AutoMigrate(&rooms.Room{})
+	db.AutoMigrate(&rooms.Pictures{})
 }
