@@ -2,6 +2,7 @@ package handler
 
 import (
 	"StayApp-API/features/rooms"
+	"StayApp-API/middlewares"
 	"StayApp-API/utils/helper"
 	"net/http"
 	"strconv"
@@ -67,4 +68,23 @@ func (rm *RoomHandler) GetOne(c echo.Context) error {
 	res := RoomResponse{}
 	copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, " room profile successfully displayed", res))
+}
+
+func (rm *RoomHandler) Update(c echo.Context) error {
+	roomID := int(middlewares.ExtractToken(c))
+	updateInput := RoomRequest{}
+	if err := c.Bind(&updateInput); err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	file, errFile := c.FormFile("pictures")
+	if errFile != nil {
+		return errFile
+	}
+	updateRoom := rooms.Core{}
+	copier.Copy(&updateRoom, &updateInput)
+	err := rm.srv.Update(roomID, updateRoom, file)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "update room successfully"))
 }

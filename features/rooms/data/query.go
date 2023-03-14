@@ -17,6 +17,19 @@ func New(db *gorm.DB) rooms.RoomData {
 	}
 }
 
+// Update implements rooms.RoomData
+func (rm *roomQuery) Update(input rooms.Core, id uint) error {
+	data := CoreToRoom(input)
+	tx := rm.db.Model(&Room{}).Where("id = ?", id).Updates(&data)
+	if tx.RowsAffected < 1 {
+		return errors.New("room no updated")
+	}
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 // SelectOne implements rooms.RoomData
 func (rm *roomQuery) SelectOne(id uint) (rooms.Core, error) {
 	tmp := Room{}

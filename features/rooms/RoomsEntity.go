@@ -1,5 +1,7 @@
 package rooms
 
+import "mime/multipart"
+
 type Core struct {
 	ID                int
 	Name              string `validate:"required"`
@@ -35,9 +37,13 @@ type PictCore struct {
 type RoomService interface {
 	Add(newRoom Core) error
 	GetAll(page int, name string) ([]Core, error)
+	GetOne(id int) (Core, error)
+	Update(id int, updateRoom Core, file *multipart.FileHeader) error
 }
 
 type RoomData interface {
 	Insert(input Core) error
 	SelectAll(limit, offset int, name string) ([]Core, error)
+	SelectOne(id uint) (Core, error)
+	Update(input Core, id uint) error
 }

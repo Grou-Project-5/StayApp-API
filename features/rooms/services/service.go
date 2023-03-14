@@ -2,6 +2,7 @@ package services
 
 import (
 	"StayApp-API/features/rooms"
+	"mime/multipart"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -16,6 +17,15 @@ func New(repo rooms.RoomData) rooms.RoomService {
 		data:     repo,
 		validate: validator.New(),
 	}
+}
+
+// Update implements rooms.RoomService
+func (srv *roomService) Update(id int, updateRoom rooms.Core, file *multipart.FileHeader) error {
+	errUpdate := srv.data.Update(updateRoom, uint(id))
+	if errUpdate != nil {
+		return errUpdate
+	}
+	return nil
 }
 
 // GetOne implements rooms.RoomService
