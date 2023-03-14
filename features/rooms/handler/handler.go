@@ -88,3 +88,12 @@ func (rm *RoomHandler) Update(c echo.Context) error {
 	}
 	return c.JSON(helper.SuccessResponse(http.StatusOK, "update room successfully"))
 }
+
+func (rm *RoomHandler) Delete(c echo.Context) error {
+	roomID := int(middlewares.ExtractToken(c))
+	err := rm.srv.Delete(roomID)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "room successfully displayed"))
+}
