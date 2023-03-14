@@ -31,4 +31,6 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	roomSrv := _roomService.New(roomData)
 	roomHdl := _roomHandler.New(roomSrv)
 	e.POST("/rooms", roomHdl.Add, middlewares.JWTMiddleware())
+	e.GET("/rooms/", roomHdl.GetAll, middlewares.JWTMiddleware())
+	e.GET("/rooms/:id", roomHdl.GetOne, middlewares.JWTMiddleware())
 }
