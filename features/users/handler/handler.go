@@ -3,6 +3,8 @@ package handler
 import (
 	"StayApp-API/features/users"
 	"StayApp-API/middlewares"
+	"strconv"
+
 	// "StayApp-API/middlewares"
 	"StayApp-API/utils/helper"
 	"net/http"
@@ -92,4 +94,18 @@ func (uh *UserHandler) ChangePassword(c echo.Context) error {
 		return c.JSON(helper.ErrorResponse(err))
 	}
 	return c.JSON(helper.SuccessResponse(http.StatusOK, "changed password successfully"))
+}
+
+func (uh *UserHandler) UserByID(c echo.Context) error {
+	userID, errCnv := strconv.Atoi(c.Param("id"))
+	if errCnv != nil {
+		return errCnv
+	}
+	data, err := uh.srv.UserByID(userID)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	res := UserResponse{}
+	copier.Copy(&res, &data)
+	return c.JSON(helper.SuccessResponse(http.StatusOK, " profile successfully displayed", res))
 }

@@ -115,12 +115,16 @@ func (us *userService) ChangePassword(userID int, oldPass string, newPass users.
 	return nil
 }
 
-// Delete implements users.UserService
-func (*userService) Delete(id int) error {
-	panic("unimplemented")
+// UserByID implements users.UserService
+func (us *userService) UserByID(userID int) (users.Core, error) {
+	tmp, err := us.data.UserByID(userID)
+	if err != nil {
+		return users.Core{}, err
+	}
+	return tmp, nil
 }
 
-// UserByID implements users.UserService
-func (*userService) UserByID(id int) (users.Core, error) {
+// Delete implements users.UserService
+func (*userService) Delete(id int) error {
 	panic("unimplemented")
 }

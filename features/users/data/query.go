@@ -89,12 +89,20 @@ func (uq *userQuery) ChangePassword(userID int, newPass users.Core) error {
 	return nil
 }
 
-// Delete implements users.UserData
-func (*userQuery) Delete(id int) error {
-	panic("unimplemented")
+// GetUser implements users.UserData
+func (uq *userQuery) UserByID(userID int) (users.Core, error) {
+	tmp := User{}
+	tx := uq.db.Where("id = ?", userID).First(&tmp)
+	if tx.RowsAffected < 1 {
+		return users.Core{}, errors.New("user not found")
+	}
+	if tx.Error != nil {
+		return users.Core{}, tx.Error
+	}
+	return UserToCore(tmp), nil
 }
 
-// UserByID implements users.UserData
-func (*userQuery) UserByID(id int) (users.Core, error) {
+// Delete implements users.UserData
+func (*userQuery) Delete(id int) error {
 	panic("unimplemented")
 }
