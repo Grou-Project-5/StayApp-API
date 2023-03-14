@@ -4,6 +4,7 @@ import (
 	"StayApp-API/features/users"
 	"StayApp-API/middlewares"
 	"StayApp-API/utils/helper"
+	"errors"
 	"mime/multipart"
 
 	"github.com/go-playground/validator/v10"
@@ -68,22 +69,66 @@ func (us *userService) MyProfile(userID int) (users.Core, error) {
 	return tmp, nil
 }
 
-// ChangePassword implements users.UserService
-func (*userService) ChangePassword(id int, oldPass string, newPass users.Core) error {
-	panic("unimplemented")
-}
-
-// Delete implements users.UserService
-func (*userService) Delete(id int) error {
-	panic("unimplemented")
-}
-
 // Update implements users.UserService
-func (*userService) Update(id int, updateUser users.Core, file *multipart.FileHeader) error {
-	panic("unimplemented")
+func (us *userService) Update(userID int, updateUser users.Core, fileHeader *multipart.FileHeader) error {
+	if fileHeader != nil {
+		file, _ := fileHeader.Open()
+		uploadURL, err := helper.UploadFile(file, "/users")
+		if err != nil {
+			return err
+		}
+		updateUser.Pictures = uploadURL[0]
+	}
+	err := us.data.Update(userID, updateUser)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// ChangePassword implements users.UserService
+func (us *userService) ChangePassword(userID int, oldPass string, newPass users.Core) error {
+	if len(newPass.Password) < 3 {
+		return errors.New("your password must be at least 3 characters")
+	}
+	// Get old password from database
+	res, err := us.data.CheckPassword(userID)
+	if err != nil {
+		return err
+	}
+	// Compare old password and new password
+	errCompare := helper.PassCompare(res.Password, oldPass)
+	if errCompare != nil {
+		return errCompare
+	}
+	// Bcrypt new password
+	bcrypt, errBcrypt := helper.PassBcrypt(newPass.Password)
+	if errBcrypt != nil {
+		return errBcrypt
+	}
+	newPass.Password = bcrypt
+	// Update password in database
+	err = us.data.ChangePassword(userID, newPass)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // UserByID implements users.UserService
-func (*userService) UserByID(id int) (users.Core, error) {
-	panic("unimplemented")
+func (us *userService) UserByID(userID int) (users.Core, error) {
+	tmp, err := us.data.UserByID(userID)
+	if err != nil {
+		return users.Core{}, err
+	}
+	return tmp, nil
+}
+
+// Delete implements users.UserService
+func (us *userService) Delete(userID int) error {
+	err := us.data.Delete(userID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

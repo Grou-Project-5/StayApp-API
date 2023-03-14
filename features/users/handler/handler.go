@@ -3,6 +3,8 @@ package handler
 import (
 	"StayApp-API/features/users"
 	"StayApp-API/middlewares"
+	"strconv"
+
 	// "StayApp-API/middlewares"
 	"StayApp-API/utils/helper"
 	"net/http"
@@ -58,4 +60,61 @@ func (uh *UserHandler) MyProfile(c echo.Context) error {
 	res := UserResponse{}
 	copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, "profile successfully displayed", res))
+}
+
+func (uh *UserHandler) Update(c echo.Context) error {
+	userID := int(middlewares.ExtractToken(c))
+	updateInput := UpdateRequest{}
+	if err := c.Bind(&updateInput); err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	file, errFile := c.FormFile("pictures")
+	if errFile != nil {
+		return errFile
+	}
+	updateUser := users.Core{}
+	copier.Copy(&updateUser, &updateInput)
+	err := uh.srv.Update(userID, updateUser, file)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "update profile successfully"))
+}
+
+func (uh *UserHandler) ChangePassword(c echo.Context) error {
+	userID := int(middlewares.ExtractToken(c))
+	passwordInput := ChangePasswordRequest{}
+	if err := c.Bind(&passwordInput); err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	updatePassword := users.Core{}
+	updatePassword.Password = passwordInput.NewPass
+	err := uh.srv.ChangePassword(userID, passwordInput.OldPass, updatePassword)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "changed password successfully"))
+}
+
+func (uh *UserHandler) UserByID(c echo.Context) error {
+	userID, errCnv := strconv.Atoi(c.Param("id"))
+	if errCnv != nil {
+		return errCnv
+	}
+	data, err := uh.srv.UserByID(userID)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	res := UserResponse{}
+	copier.Copy(&res, &data)
+	return c.JSON(helper.SuccessResponse(http.StatusOK, " profile successfully displayed", res))
+}
+
+func (uh *UserHandler) Delete(c echo.Context) error {
+	userID := int(middlewares.ExtractToken(c))
+	err := uh.srv.Delete(userID)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "profile successfully displayed"))
 }
