@@ -2,6 +2,7 @@ package handler
 
 import (
 	"StayApp-API/features/users"
+	"StayApp-API/middlewares"
 	// "StayApp-API/middlewares"
 	"StayApp-API/utils/helper"
 	"net/http"
@@ -46,4 +47,15 @@ func (uh *UserHandler) Login(c echo.Context) error {
 	res := MiniResponse{}
 	copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, "login successfully", res, token))
+}
+
+func (uh *UserHandler) MyProfile(c echo.Context) error {
+	userID := int(middlewares.ExtractToken(c))
+	data, err := uh.srv.MyProfile(userID)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	res := UserResponse{}
+	copier.Copy(&res, &data)
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "profile successfully displayed", res))
 }

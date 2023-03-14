@@ -59,6 +59,15 @@ func (us *userService) Login(email string, password string) (string, users.Core,
 	return token, tmp, nil
 }
 
+// Profile implements users.UserService
+func (us *userService) MyProfile(userID int) (users.Core, error) {
+	tmp, err := us.data.MyProfile(userID)
+	if err != nil {
+		return users.Core{}, err
+	}
+	return tmp, nil
+}
+
 // ChangePassword implements users.UserService
 func (*userService) ChangePassword(id int, oldPass string, newPass users.Core) error {
 	panic("unimplemented")
@@ -66,11 +75,6 @@ func (*userService) ChangePassword(id int, oldPass string, newPass users.Core) e
 
 // Delete implements users.UserService
 func (*userService) Delete(id int) error {
-	panic("unimplemented")
-}
-
-// MyProfile implements users.UserService
-func (*userService) MyProfile(id int) (users.Core, error) {
 	panic("unimplemented")
 }
 
