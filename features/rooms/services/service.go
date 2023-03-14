@@ -18,6 +18,14 @@ func New(repo rooms.RoomData) rooms.RoomService {
 	}
 }
 
+// GetAll implements rooms.RoomService
+func (srv *roomService) GetAll(page int, name string) ([]rooms.Core, error) {
+	limit := 10
+	offset := (page - 1) * limit
+	data, err := srv.data.SelectAll(limit, offset, name)
+	return data, err
+}
+
 // Add implements rooms.RoomService
 func (srv *roomService) Add(newRoom rooms.Core) error {
 	errValidate := srv.validate.Struct(newRoom)
