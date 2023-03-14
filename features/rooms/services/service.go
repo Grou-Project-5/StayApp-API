@@ -19,6 +19,15 @@ func New(repo rooms.RoomData) rooms.RoomService {
 	}
 }
 
+// Delete implements rooms.RoomService
+func (srv *roomService) Delete(id int) error {
+	errDelete := srv.data.Delete(uint(id))
+	if errDelete != nil {
+		return errDelete
+	}
+	return nil
+}
+
 // Update implements rooms.RoomService
 func (srv *roomService) Update(id int, updateRoom rooms.Core, file *multipart.FileHeader) error {
 	errUpdate := srv.data.Update(updateRoom, uint(id))

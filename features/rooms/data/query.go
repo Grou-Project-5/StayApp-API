@@ -17,6 +17,18 @@ func New(db *gorm.DB) rooms.RoomData {
 	}
 }
 
+// Delete implements rooms.RoomData
+func (rm *roomQuery) Delete(id uint) error {
+	tx := rm.db.Delete(&Room{}, id)
+	if tx.RowsAffected < 1 {
+		return errors.New("no data deleted")
+	}
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 // Update implements rooms.RoomData
 func (rm *roomQuery) Update(input rooms.Core, id uint) error {
 	data := CoreToRoom(input)
