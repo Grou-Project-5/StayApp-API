@@ -22,3 +22,8 @@ type UpdateRequest struct {
 	Gender   string `json:"gender" form:"gender"`
 	Pictures string `json:"pictures" form:"pictures"`
 }
+
+type ChangePasswordRequest struct {
+	OldPass string `json:"old_password" form:"old_password"`
+	NewPass string `json:"new_password" form:"new_password"`
+}
