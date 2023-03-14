@@ -109,3 +109,12 @@ func (uh *UserHandler) UserByID(c echo.Context) error {
 	copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, " profile successfully displayed", res))
 }
+
+func (uh *UserHandler) Delete(c echo.Context) error {
+	userID := int(middlewares.ExtractToken(c))
+	err := uh.srv.Delete(userID)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "profile successfully displayed"))
+}

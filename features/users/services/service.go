@@ -125,6 +125,10 @@ func (us *userService) UserByID(userID int) (users.Core, error) {
 }
 
 // Delete implements users.UserService
-func (*userService) Delete(id int) error {
-	panic("unimplemented")
+func (us *userService) Delete(userID int) error {
+	err := us.data.Delete(userID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
