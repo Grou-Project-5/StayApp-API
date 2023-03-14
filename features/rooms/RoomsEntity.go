@@ -34,8 +34,10 @@ type PictCore struct {
 
 type RoomService interface {
 	Add(newRoom Core) error
+	GetAll(page int, name string) ([]Core, error)
 }
 
 type RoomData interface {
 	Insert(input Core) error
+	SelectAll(limit, offset int, name string) ([]Core, error)
 }
