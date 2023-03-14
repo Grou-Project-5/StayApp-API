@@ -33,3 +33,16 @@ func CoreToUser(data users.Core) User {
 		Pictures: data.Pictures,
 	}
 }
+
+func UserToCore(data User) users.Core {
+	return users.Core{
+		Id:       data.ID,
+		Name:     data.Name,
+		Email:    data.Email,
+		Password: data.Password,
+		Address:  data.Address,
+		Phone:    data.Phone,
+		Gender:   data.Gender,
+		Pictures: data.Pictures,
+	}
+}
