@@ -18,6 +18,12 @@ func New(repo rooms.RoomData) rooms.RoomService {
 	}
 }
 
+// GetOne implements rooms.RoomService
+func (srv *roomService) GetOne(id int) (rooms.Core, error) {
+	data, err := srv.data.SelectOne(uint(id))
+	return data, err
+}
+
 // GetAll implements rooms.RoomService
 func (srv *roomService) GetAll(page int, name string) ([]rooms.Core, error) {
 	limit := 10

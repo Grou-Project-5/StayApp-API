@@ -54,3 +54,17 @@ func (rm *RoomHandler) GetAll(c echo.Context) error {
 	dataResponse := CoreToGetAllRoomResp(data)
 	return c.JSON(http.StatusOK, helper.ResponseWithData("Success", dataResponse))
 }
+
+func (rm *RoomHandler) GetOne(c echo.Context) error {
+	roomID, errCnv := strconv.Atoi(c.Param("id"))
+	if errCnv != nil {
+		return errCnv
+	}
+	data, err := rm.srv.GetOne(roomID)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	res := RoomResponse{}
+	copier.Copy(&res, &data)
+	return c.JSON(helper.SuccessResponse(http.StatusOK, " room profile successfully displayed", res))
+}
