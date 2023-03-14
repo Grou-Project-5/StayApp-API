@@ -98,3 +98,16 @@ func ErrorResponse(err error) (int, interface{}) {
 	}
 	return code, resp
 }
+
+func ResponseWithData(message string, data any) map[string]any {
+	return map[string]any{
+		"message": message,
+		"data":    data,
+	}
+}
+
+func Response(message string) map[string]any {
+	return map[string]any{
+		"message": message,
+	}
+}
