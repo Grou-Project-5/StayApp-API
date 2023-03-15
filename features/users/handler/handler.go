@@ -3,10 +3,8 @@ package handler
 import (
 	"StayApp-API/features/users"
 	"StayApp-API/middlewares"
-	"strconv"
-
-	// "StayApp-API/middlewares"
 	"StayApp-API/utils/helper"
+	"strconv"
 	"net/http"
 
 	"github.com/jinzhu/copier"
@@ -68,10 +66,8 @@ func (uh *UserHandler) Update(c echo.Context) error {
 	if err := c.Bind(&updateInput); err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}
-	file, errFile := c.FormFile("pictures")
-	if errFile != nil {
-		return errFile
-	}
+	file, _ := c.FormFile("pictures")
+
 	updateUser := users.Core{}
 	copier.Copy(&updateUser, &updateInput)
 	err := uh.srv.Update(userID, updateUser, file)

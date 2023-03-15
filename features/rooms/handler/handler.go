@@ -76,10 +76,8 @@ func (rm *RoomHandler) Update(c echo.Context) error {
 	if err := c.Bind(&updateInput); err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}
-	file, errFile := c.FormFile("pictures")
-	if errFile != nil {
-		return errFile
-	}
+	file, _ := c.FormFile("pictures")
+	
 	updateRoom := rooms.Core{}
 	copier.Copy(&updateRoom, &updateInput)
 	err := rm.srv.Update(roomID, updateRoom, file)
