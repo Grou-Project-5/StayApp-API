@@ -31,3 +31,12 @@ func (fs *feedbackService) Add(newFeedback feedback.Core) error {
 	}
 	return nil
 }
+
+// List implements feedback.FeedbackService
+func (fs *feedbackService) List(roomiD int) ([]feedback.Core, error) {
+	tmp, err := fs.data.List(roomiD)
+	if err != nil {
+		return nil, err
+	}
+	return tmp, nil
+}
