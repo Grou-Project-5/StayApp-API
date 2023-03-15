@@ -3,12 +3,12 @@ package rooms
 import "mime/multipart"
 
 type Core struct {
-	ID                int
+	ID                uint
 	Name              string `validate:"required"`
 	Price             int    `validate:"required"`
 	Description       string `validate:"required"`
 	Location          string `validate:"required"`
-	UserID            int
+	UserID            uint
 	UserName          string
 	MaxVisitors       int
 	SpecialAccess     string

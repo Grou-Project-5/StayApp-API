@@ -42,8 +42,8 @@ type Pictures struct {
 
 func CoreToRoom(data rooms.Core) Room {
 	return Room{
-		Model:             gorm.Model{ID: uint(data.ID)},
-		UserID:            uint(data.UserID),
+		Model:             gorm.Model{ID:data.ID},
+		UserID:            data.UserID,
 		Name:              data.Name,
 		Price:             data.Price,
 		Description:       data.Description,
@@ -70,12 +70,12 @@ func CoreToRoom(data rooms.Core) Room {
 
 func RoomToCore(data Room) rooms.Core {
 	return rooms.Core{
-		ID:                int(data.ID),
+		ID:                data.ID,
 		Name:              data.Name,
 		Price:             data.Price,
 		Description:       data.Description,
 		Location:          data.Location,
-		UserID:            int(data.UserID),
+		UserID:            data.UserID,
 		UserName:          data.UserName,
 		MaxVisitors:       data.MaxVisitors,
 		SpecialAccess:     data.SpecialAccess,

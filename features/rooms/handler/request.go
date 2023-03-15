@@ -9,7 +9,7 @@ type RoomRequest struct {
 	Price       int    `json:"price" form:"price"`
 	Description string `json:"description" form:"description"`
 	Location    string `json:"location" form:"location"`
-	UserID      int    `json:"user_id" form:"user_id"`
+	UserID      uint    `json:"user_id" form:"user_id"`
 	UserName    string `json:"user_name" form:"user_name"`
 }
 
