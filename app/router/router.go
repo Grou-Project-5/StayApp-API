@@ -9,6 +9,9 @@ import (
 	_roomHandler "StayApp-API/features/rooms/handler"
 	_roomService "StayApp-API/features/rooms/services"
 
+	_feedbackData "StayApp-API/features/feedback/data"
+	_feedbackHandler "StayApp-API/features/feedback/handler"
+	_feedbackService "StayApp-API/features/feedback/services"
 	"StayApp-API/middlewares"
 
 	"github.com/labstack/echo/v4"
@@ -35,4 +38,9 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/rooms/:id", roomHdl.GetOne, middlewares.JWTMiddleware())
 	e.PUT("/rooms/:id", roomHdl.Update, middlewares.JWTMiddleware())
 	e.DELETE("/rooms/:id", roomHdl.Delete, middlewares.JWTMiddleware())
+	
+	feedbackData := _feedbackData.New(db)
+	feedbackSrv := _feedbackService.New(feedbackData)
+	feedbackHdl := _feedbackHandler.New(feedbackSrv)
+	e.POST("/rooms/:id", feedbackHdl.Add, middlewares.JWTMiddleware())
 }
