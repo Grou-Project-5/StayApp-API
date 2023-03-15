@@ -1,8 +1,9 @@
 package data
 
 import (
-	"StayApp-API/features/rooms"
 	modelFeedback "StayApp-API/features/feedback/data"
+	modelReservation "StayApp-API/features/reservations/data"
+	"StayApp-API/features/rooms"
 
 	"gorm.io/gorm"
 )
@@ -31,7 +32,8 @@ type Room struct {
 	TakePhoto         string
 	Other             string
 	Pictures          []Pictures
-	Feedback    []modelFeedback.Feedback
+	Feedback          []modelFeedback.Feedback
+	Reservation				[]modelReservation.Reservation
 }
 
 type Pictures struct {
@@ -42,7 +44,7 @@ type Pictures struct {
 
 func CoreToRoom(data rooms.Core) Room {
 	return Room{
-		Model:             gorm.Model{ID:data.ID},
+		Model:             gorm.Model{ID: data.ID},
 		UserID:            data.UserID,
 		Name:              data.Name,
 		Price:             data.Price,

@@ -2,7 +2,9 @@ package data
 
 import (
 	modelFeedback "StayApp-API/features/feedback/data"
+	modelReservation "StayApp-API/features/reservations/data"
 	modelRoom "StayApp-API/features/rooms/data"
+
 	"StayApp-API/features/users"
 
 	"gorm.io/gorm"
@@ -10,15 +12,16 @@ import (
 
 type User struct {
 	gorm.Model
-	Name     string
-	Email    string `gorm:"unique"`
-	Password string
-	Address  string
-	Phone    string
-	Gender   string `gorm:"type:enum('Male', 'Female')"`
-	Pictures string
-	Rooms    []modelRoom.Room
-	Feedback []modelFeedback.Feedback
+	Name        string
+	Email       string `gorm:"unique"`
+	Password    string
+	Address     string
+	Phone       string
+	Gender      string `gorm:"type:enum('Male', 'Female')"`
+	Pictures    string
+	Rooms       []modelRoom.Room
+	Feedback    []modelFeedback.Feedback
+	Reservation []modelReservation.Reservation
 }
 
 func CoreToUser(data users.Core) User {
