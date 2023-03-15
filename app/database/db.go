@@ -5,6 +5,7 @@ import (
 	users "StayApp-API/features/users/data"
 	rooms "StayApp-API/features/rooms/data"
 	feedback "StayApp-API/features/feedback/data"
+	reservation "StayApp-API/features/reservations/data"
 	"fmt"
 	"log"
 
@@ -35,4 +36,5 @@ func InitialMigration(db *gorm.DB) {
 	db.AutoMigrate(&rooms.Room{})
 	db.AutoMigrate(&rooms.Pictures{})
 	db.AutoMigrate(&feedback.Feedback{})
+	db.AutoMigrate(&reservation.Reservation{})
 }
