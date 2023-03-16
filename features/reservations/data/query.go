@@ -25,3 +25,18 @@ func (rq *reservationQuery) Check(roomID int, startDate string, endDate string) 
 	}
 	return tmp == 0, nil
 }
+
+// Add implements reservations.ReservationData
+func (rq *reservationQuery) Add(newReservation reservations.Core) error {
+	var days, price uint
+	rq.db.Raw("SELECT DATEDIFF(end_date , start_date) FROM reservations WHERE id = 1;").Scan(&days)
+	rq.db.Raw("SELECT price FROM rooms WHERE id = ?", newReservation.RoomID).First(&price)
+	newReservation.GrossAmount = (days+1) * price
+
+	data := CoreToReservation(newReservation)
+	tx := rq.db.Create(&data)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
