@@ -21,8 +21,8 @@ func New(repo rooms.RoomData) rooms.RoomService {
 }
 
 // Delete implements rooms.RoomService
-func (srv *roomService) Delete(id int) error {
-	errDelete := srv.data.Delete(id)
+func (srv *roomService) Delete(userid int, id int) error {
+	errDelete := srv.data.Delete(userid, id)
 	if errDelete != nil {
 		return errDelete
 	}
