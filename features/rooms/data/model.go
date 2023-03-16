@@ -32,6 +32,7 @@ type Room struct {
 	CheckOut          string
 	TakePhoto         string
 	Other             string
+	UserPhone         string
 	Pictures          string
 	RatingRoom        float64
 	Feedback          []modelFeedback.Feedback
@@ -62,6 +63,7 @@ func CoreToRoom(data rooms.Core) Room {
 		CheckOut:          data.CheckOut,
 		TakePhoto:         data.TakePhoto,
 		Other:             data.Other,
+		UserPhone:         data.UserPhone,
 		Pictures:          data.Pictures,
 		RatingRoom:        data.RatingRoom,
 		Availability:      data.Availability,
