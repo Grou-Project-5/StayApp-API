@@ -17,7 +17,8 @@ type Reservation struct {
 	Days          int64
 	GrossAmount   int64
 	OrderID       string
-	StatusPaymen  string `gorm:"default:Pending"`
+	StatusPayment  string `gorm:"default:Pending"`
+	RedirectUrl   string
 }
 
 func CoreToReservation(data reservations.Core) Reservation {
@@ -32,7 +33,8 @@ func CoreToReservation(data reservations.Core) Reservation {
 		Days:          data.Days,
 		GrossAmount:   data.GrossAmount,
 		OrderID:       data.OrderID,
-		StatusPaymen:  data.StatusPaymen,
+		StatusPayment:  data.StatusPayment,
+		RedirectUrl:   data.RedirectUrl,
 	}
 }
 
@@ -48,6 +50,7 @@ func ReservationToCore(data Reservation) reservations.Core {
 		Days:          data.Days,
 		GrossAmount:   data.GrossAmount,
 		OrderID:       data.OrderID,
-		StatusPaymen:  data.StatusPaymen,
+		StatusPayment:  data.StatusPayment,
+		RedirectUrl:   data.RedirectUrl,
 	}
 }
