@@ -55,4 +55,5 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	reservationsHdl := _reservationsHandler.New(reservationsSrv)
 	e.POST("/check", reservationsHdl.Check)
 	e.POST("/reservation", reservationsHdl.Add, middlewares.JWTMiddleware())
+	e.POST("/paystatus", reservationsHdl.PayStatus)
 }
