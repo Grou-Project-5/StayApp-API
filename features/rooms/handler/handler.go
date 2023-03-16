@@ -70,7 +70,7 @@ func (rm *RoomHandler) GetOne(c echo.Context) error {
 		return c.JSON(helper.ErrorResponse(err))
 	}
 	res := CoreToGetAllRoomRespB(data)
-	
+
 	// copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, " room profile successfully displayed", res))
 }
@@ -98,8 +98,12 @@ func (rm *RoomHandler) Update(c echo.Context) error {
 }
 
 func (rm *RoomHandler) Delete(c echo.Context) error {
-	roomID := int(middlewares.ExtractToken(c))
-	err := rm.srv.Delete(roomID)
+	userID := int(middlewares.ExtractToken(c))
+	roomID, errCnv := strconv.Atoi(c.Param("id"))
+	if errCnv != nil {
+		return errCnv
+	}
+	err := rm.srv.Delete(userID, roomID)
 	if err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}
