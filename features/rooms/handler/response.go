@@ -26,8 +26,8 @@ type RoomResponse struct {
 	TakePhoto         string  `json:"take_photo" form:"take_photo"`
 	Other             string  `json:"other" form:"other"`
 	UserPhone         string  `json:"user_phone" form:"user_phone"`
-	UserID            uint    `json:"user_id" form:"user_id"`
-	UserName          string  `json:"user_name" form:"user_name"`
+	// UserID            uint    `json:"user_id" form:"user_id"`
+	// UserName          string  `json:"user_name" form:"user_name"`
 	Pictures          string  `json:"pictures"`
 	RatingRoom        float64 `json:"rating_room"`
 	Availability      string  `json:"availability" form:"availability"`
@@ -39,7 +39,6 @@ type AllRoomResponse struct {
 	Price        int     `json:"price" form:"price"`
 	Description  string  `json:"description" form:"description"`
 	Location     string  `json:"location" form:"location"`
-	UserName     string  `json:"user_name" form:"user_name"`
 	Pictures     string  `json:"pictures"`
 	RatingRoom   float64 `json:"rating_room"`
 	Availability string  `json:"availability" form:"availability"`
@@ -60,7 +59,6 @@ func CoreToGetAllRoomRespB(data rooms.Core) AllRoomResponse {
 		Price:        data.Price,
 		Description:  data.Description,
 		Location:     data.Location,
-		UserName:     data.UserName,
 		Pictures:     data.Pictures,
 		RatingRoom:   data.RatingRoom,
 		Availability: data.Availability,

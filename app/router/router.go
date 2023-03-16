@@ -56,4 +56,5 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.POST("/check", reservationsHdl.Check)
 	e.POST("/reservation", reservationsHdl.Add, middlewares.JWTMiddleware())
 	e.POST("/paystatus", reservationsHdl.PayStatus)
+	e.GET("/history", reservationsHdl.History, middlewares.JWTMiddleware())
 }

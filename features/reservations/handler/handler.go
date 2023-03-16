@@ -90,3 +90,14 @@ func (rm *ReservationHandler) PayStatus(c echo.Context) error {
 	copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, "success display payment status", res))
 }
+
+func (rm *ReservationHandler) History(c echo.Context) error {
+	userID := int(middlewares.ExtractToken(c))
+	data, err := rm.srv.History(userID)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	res := ListHistoryResponse{}
+	copier.Copy(&res, &data)
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "success show history", res))
+}

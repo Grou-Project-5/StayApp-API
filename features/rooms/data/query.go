@@ -64,6 +64,7 @@ func (rm *roomQuery) SelectOne(id uint) (rooms.Core, error) {
 	if tx.Error != nil {
 		return rooms.Core{}, tx.Error
 	}
+	rm.db.Raw("SELECT AVG(rating) FROM feedbacks Where room_id = ?", id).Scan(&tmp.RatingRoom)
 	return RoomToCore(tmp), nil
 }
 
