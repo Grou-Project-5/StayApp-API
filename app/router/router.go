@@ -42,6 +42,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/rooms/:id", roomHdl.GetOne)
 	e.PUT("/rooms/:id", roomHdl.Update, middlewares.JWTMiddleware())
 	e.DELETE("/rooms/:id", roomHdl.Delete, middlewares.JWTMiddleware())
+	e.GET("/room", roomHdl.GetAllRoomUser, middlewares.JWTMiddleware())
 
 	feedbackData := _feedbackData.New(db)
 	feedbackSrv := _feedbackService.New(feedbackData)
