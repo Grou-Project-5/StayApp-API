@@ -11,7 +11,7 @@ type Feedback struct {
 	RoomID    uint
 	UserID    uint
 	UserName  string
-	Rating    int
+	Rating    float64
 	Comment   string
 	CreatedAt string
 }

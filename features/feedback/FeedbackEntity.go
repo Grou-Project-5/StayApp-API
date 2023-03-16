@@ -5,8 +5,8 @@ type Core struct {
 	RoomID    uint
 	UserID    uint
 	UserName  string
-	Rating    int    `validate:"required"`
-	Comment   string `validate:"required"`
+	Rating    float64 `validate:"required"`
+	Comment   string  `validate:"required"`
 	CreatedAt string
 }
 

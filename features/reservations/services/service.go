@@ -3,6 +3,7 @@ package services
 import (
 	"StayApp-API/features/reservations"
 	"StayApp-API/utils/helper"
+	"errors"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/midtrans/midtrans-go/snap"
@@ -36,6 +37,12 @@ func (rs *reservationService) Add(newReservation reservations.Core) (string, *sn
 	if errVld != nil {
 		return "", nil, errVld
 	}
+	
+	tmp, _ := rs.data.Check(newReservation)
+	if !tmp {
+		return "", nil, errors.New("room not available")
+	}
+
 	GrossAmount := rs.data.GrossAmt(int(newReservation.RoomID), newReservation.Days)
 
 	midtrans := helper.MidtransPay(newReservation.OrderID, GrossAmount)
