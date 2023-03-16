@@ -1,7 +1,7 @@
 package handler
 
 type NewFeedbackRequest struct {
-	RoomID    uint
+	RoomID    uint	`json:"room_id"`
 	UserID    uint
 	CreatedAt string
 	Rating    int    `json:"rating"`

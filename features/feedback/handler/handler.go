@@ -25,7 +25,6 @@ func New(service feedback.FeedbackService) *FeedbackHandler {
 
 func (fh *FeedbackHandler) Add(c echo.Context) error {
 	userID := int(middlewares.ExtractToken(c))
-	roomID, _ := strconv.Atoi(c.Param("id"))
 	newFeedbackInput := NewFeedbackRequest{}
 	if err := c.Bind(&newFeedbackInput); err != nil {
 		return c.JSON(helper.ErrorResponse(err))
@@ -33,9 +32,10 @@ func (fh *FeedbackHandler) Add(c echo.Context) error {
 	curtime := time.Now()
 	newFeedbackInput.CreatedAt = curtime.Format("January 2006")
 	newFeedbackInput.UserID = uint(userID)
-	newFeedbackInput.RoomID = uint(roomID)
+
 	newFeedback := feedback.Core{}
 	copier.Copy(&newFeedback, &newFeedbackInput)
+
 	err := fh.srv.Add(newFeedback)
 	if err != nil {
 		return c.JSON(helper.ErrorResponse(err))
@@ -44,7 +44,7 @@ func (fh *FeedbackHandler) Add(c echo.Context) error {
 }
 
 func (fh *FeedbackHandler) List(c echo.Context) error {
-	roomID, errCnv := strconv.Atoi(c.Param("id"))
+	roomID, errCnv := strconv.Atoi(c.Param("room_id"))
 	if errCnv != nil {
 		return errCnv
 	}

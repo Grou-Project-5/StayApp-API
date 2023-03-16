@@ -2,8 +2,10 @@ package services
 
 import (
 	"StayApp-API/features/reservations"
+	"StayApp-API/utils/helper"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/midtrans/midtrans-go/snap"
 )
 
 type reservationService struct {
@@ -19,25 +21,28 @@ func New(repo reservations.ReservationData) reservations.ReservationService {
 }
 
 // Check implements reservations.ReservationService
-func (rs *reservationService) Check(roomID int, startDate string, endDate string) (bool, error) {
-	tmp, err := rs.data.Check(roomID, startDate, endDate)
+func (rs *reservationService) Check(checkAvailability reservations.Core) (bool, error) {
+	tmp, err := rs.data.Check(checkAvailability)
 	if err != nil {
 		return false, err
 	}
 	return tmp, nil
 }
 
-
 // Add implements reservations.ReservationService
-func (rs *reservationService) Add(newReservation reservations.Core) error {
+func (rs *reservationService) Add(newReservation reservations.Core) (string, *snap.Response, error) {
 	// Check input validation
 	errVld := rs.vld.Struct(newReservation)
 	if errVld != nil {
-		return errVld
+		return "", nil, errVld
 	}
+	GrossAmount := rs.data.GrossAmt(int(newReservation.RoomID), newReservation.Days)
+
+	midtrans := helper.MidtransPay(newReservation.OrderID, GrossAmount)
+	newReservation.GrossAmount = GrossAmount
 	err := rs.data.Add(newReservation)
 	if err != nil {
-		return err
+		return "", nil, err
 	}
-	return nil
+	return newReservation.OrderID, midtrans, nil
 }

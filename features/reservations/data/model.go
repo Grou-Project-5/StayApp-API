@@ -13,7 +13,11 @@ type Reservation struct {
 	StartDate     string
 	EndDate       string
 	PaymentMethod string
-	GrossAmount   uint
+	RoomPrice     int
+	Days          int64
+	GrossAmount   int64
+	OrderID       string
+	StatusPaymen  string `gorm:"default:Pending"`
 }
 
 func CoreToReservation(data reservations.Core) Reservation {
@@ -24,7 +28,11 @@ func CoreToReservation(data reservations.Core) Reservation {
 		StartDate:     data.StartDate,
 		EndDate:       data.EndDate,
 		PaymentMethod: data.PaymentMethod,
+		RoomPrice:     data.RoomPrice,
+		Days:          data.Days,
 		GrossAmount:   data.GrossAmount,
+		OrderID:       data.OrderID,
+		StatusPaymen:  data.StatusPaymen,
 	}
 }
 
@@ -36,6 +44,10 @@ func ReservationToCore(data Reservation) reservations.Core {
 		StartDate:     data.StartDate,
 		EndDate:       data.EndDate,
 		PaymentMethod: data.PaymentMethod,
+		RoomPrice:     data.RoomPrice,
+		Days:          data.Days,
 		GrossAmount:   data.GrossAmount,
+		OrderID:       data.OrderID,
+		StatusPaymen:  data.StatusPaymen,
 	}
 }
