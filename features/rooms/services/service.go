@@ -30,7 +30,7 @@ func (srv *roomService) Delete(id int) error {
 }
 
 // Update implements rooms.RoomService
-func (srv *roomService) Update(id int, updateRoom rooms.Core, fileHeader *multipart.FileHeader) error {
+func (srv *roomService) Update(userid int, id int, updateRoom rooms.Core, fileHeader *multipart.FileHeader) error {
 	if fileHeader != nil {
 		file, _ := fileHeader.Open()
 		uploadURL, err := helper.UploadFile(file, "/rooms")
@@ -39,7 +39,7 @@ func (srv *roomService) Update(id int, updateRoom rooms.Core, fileHeader *multip
 		}
 		updateRoom.Pictures = uploadURL[0]
 	}
-	errUpdate := srv.data.Update(updateRoom, uint(id))
+	errUpdate := srv.data.Update(uint(userid), updateRoom, uint(id))
 	if errUpdate != nil {
 		return errUpdate
 	}
