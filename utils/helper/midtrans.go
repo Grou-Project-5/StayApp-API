@@ -28,3 +28,17 @@ func MidtransPay(OrderID string, GrossAmount int64) *snap.Response {
 		snapResp, _ := snap.CreateTransaction(req)
 		return snapResp
 }
+
+func MidtransStatusPay(orderID string) (*coreapi.TransactionStatusResponse, error) {
+	midtrans.ServerKey = config.MidtransServerKey
+	midtrans.ClientKey = config.MidtransClientKey
+	midtrans.Environment = midtrans.Sandbox
+	c := coreapi.Client{}
+	c.New(config.MidtransServerKey, midtrans.Sandbox)
+
+	res, err := c.CheckTransaction(orderID)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
