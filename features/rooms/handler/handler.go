@@ -69,9 +69,9 @@ func (rm *RoomHandler) GetOne(c echo.Context) error {
 	if err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}
-	res := CoreToGetAllRoomRespB(data)
+	res := GetOneRoomResponse{}
 
-	// copier.Copy(&res, &data)
+	copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, " room profile successfully displayed", res))
 }
 

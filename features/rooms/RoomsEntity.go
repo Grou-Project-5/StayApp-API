@@ -26,6 +26,7 @@ type Core struct {
 	CheckOut          string
 	TakePhoto         string
 	Other             string
+	UserPhone         string
 	Pictures          string
 	RatingRoom        float64
 }

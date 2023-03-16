@@ -22,6 +22,7 @@ type RoomRequest struct {
 	CheckOut          string `json:"check_out" form:"check_out"`
 	TakePhoto         string `json:"take_photo" form:"take_photo"`
 	Other             string `json:"other" form:"other"`
+	UserPhone         string `json:"user_phone" form:"user_phone"`
 	UserID            uint   `json:"user_id" form:"user_id"`
 	UserName          string `json:"user_name" form:"user_name"`
 }
