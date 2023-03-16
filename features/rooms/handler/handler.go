@@ -70,12 +70,18 @@ func (rm *RoomHandler) GetOne(c echo.Context) error {
 		return c.JSON(helper.ErrorResponse(err))
 	}
 	res := CoreToGetAllRoomRespB(data)
+	
 	// copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, " room profile successfully displayed", res))
 }
 
 func (rm *RoomHandler) Update(c echo.Context) error {
-	roomID := int(middlewares.ExtractToken(c))
+	userID := int(middlewares.ExtractToken(c))
+	roomID, errCnv := strconv.Atoi(c.Param("id"))
+	if errCnv != nil {
+		return errCnv
+	}
+	// roomID := int(middlewares.ExtractToken(c))
 	updateInput := RoomRequest{}
 	if err := c.Bind(&updateInput); err != nil {
 		return c.JSON(helper.ErrorResponse(err))
@@ -84,7 +90,7 @@ func (rm *RoomHandler) Update(c echo.Context) error {
 
 	updateRoom := rooms.Core{}
 	copier.Copy(&updateRoom, &updateInput)
-	err := rm.srv.Update(roomID, updateRoom, file)
+	err := rm.srv.Update(userID, roomID, updateRoom, file)
 	if err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}

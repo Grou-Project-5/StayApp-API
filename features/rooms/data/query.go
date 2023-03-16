@@ -30,9 +30,9 @@ func (rm *roomQuery) Delete(id int) error {
 }
 
 // Update implements rooms.RoomData
-func (rm *roomQuery) Update(input rooms.Core, id uint) error {
+func (rm *roomQuery) Update(userId uint, input rooms.Core, id uint) error {
 	data := CoreToRoom(input)
-	tx := rm.db.Model(&Room{}).Where("id = ?", id).Updates(&data)
+	tx := rm.db.Model(&Room{}).Where("id = ? AND user_id = ?", id, userId).Updates(&data)
 	if tx.RowsAffected < 1 {
 		return errors.New("room no updated")
 	}

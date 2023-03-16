@@ -34,7 +34,7 @@ type RoomService interface {
 	Add(newRoom Core, file *multipart.FileHeader) error
 	GetAll(page int, name string) ([]Core, error)
 	GetOne(id int) (Core, error)
-	Update(id int, updateRoom Core, file *multipart.FileHeader) error
+	Update(userid int, id int, updateRoom Core, file *multipart.FileHeader) error
 	Delete(id int) error
 }
 
@@ -42,6 +42,6 @@ type RoomData interface {
 	Insert(input Core) error
 	SelectAll(limit, offset int, name string) ([]Core, error)
 	SelectOne(id uint) (Core, error)
-	Update(input Core, id uint) error
+	Update(userid uint, input Core, id uint) error
 	Delete(id int) error
 }
