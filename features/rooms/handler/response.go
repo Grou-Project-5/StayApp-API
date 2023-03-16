@@ -93,3 +93,34 @@ type GetOneRoomResponse struct {
 	RatingRoom        float64 `json:"rating_room"`
 	Availability      string  `json:"availability" form:"availability"`
 }
+type AllRoomByIdResponse struct {
+	ID           uint    `json:"id"`
+	Name         string  `json:"name" form:"name"`
+	Price        int     `json:"price" form:"price"`
+	Description  string  `json:"description" form:"description"`
+	Location     string  `json:"location" form:"location"`
+	Pictures     string  `json:"pictures"`
+	RatingRoom   float64 `json:"rating_room"`
+	Availability string  `json:"availability" form:"availability"`
+}
+
+func CoreToGetAllRoomByIdResp(data []rooms.Core) []AllRoomByIdResponse {
+	res := []AllRoomByIdResponse{}
+	for _, val := range data {
+		res = append(res, CoreToGetAllRoomByIdRespB(val))
+	}
+	return res
+}
+
+func CoreToGetAllRoomByIdRespB(data rooms.Core) AllRoomByIdResponse {
+	return AllRoomByIdResponse{
+		ID:           data.ID,
+		Name:         data.Name,
+		Price:        data.Price,
+		Description:  data.Description,
+		Location:     data.Location,
+		Pictures:     data.Pictures,
+		RatingRoom:   data.RatingRoom,
+		Availability: data.Availability,
+	}
+}

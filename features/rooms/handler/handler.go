@@ -128,6 +128,6 @@ func (rm *RoomHandler) GetAllRoomUser(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.Response("Failed, error read data"))
 	}
-	dataResponse := CoreToGetAllRoomResp(data)
+	dataResponse := CoreToGetAllRoomByIdResp(data)
 	return c.JSON(http.StatusOK, helper.ResponseWithData("Success", dataResponse))
 }
