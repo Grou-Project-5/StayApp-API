@@ -103,7 +103,7 @@ func (uh *UserHandler) UserByID(c echo.Context) error {
 	}
 	res := UserResponse{}
 	copier.Copy(&res, &data)
-	return c.JSON(helper.SuccessResponse(http.StatusOK, " profile successfully displayed", res))
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "profile successfully displayed", res))
 }
 
 func (uh *UserHandler) Delete(c echo.Context) error {
@@ -112,5 +112,5 @@ func (uh *UserHandler) Delete(c echo.Context) error {
 	if err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}
-	return c.JSON(helper.SuccessResponse(http.StatusOK, "profile successfully displayed"))
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "deleted account successfully"))
 }
