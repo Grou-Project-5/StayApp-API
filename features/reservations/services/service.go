@@ -14,6 +14,15 @@ type reservationService struct {
 	vld  *validator.Validate
 }
 
+// History implements reservations.ReservationService
+func (rs *reservationService) History(userID int) ([]reservations.Core, error) {
+	tmp, err := rs.data.History(userID)
+	if err != nil {
+		return nil, err
+	}
+	return tmp, nil
+}
+
 func New(repo reservations.ReservationData) reservations.ReservationService {
 	return &reservationService{
 		data: repo,

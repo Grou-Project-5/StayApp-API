@@ -10,6 +10,16 @@ type reservationQuery struct {
 	db *gorm.DB
 }
 
+// History implements reservations.ReservationData
+func (rq *reservationQuery) History(userID int) ([]reservations.Core, error) {
+	tmp := []Reservation{}
+	tx := rq.db.Where("reservations.user_id = ?", userID).Select("reservations.start_date, reservations.end_date, reservations.gross_amount, reservations.order_id, reservations.status_payment, rooms.name AS room_name").Joins("Join rooms ON reservations.room_id = rooms.id").Find(&tmp)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return ListReservationToCore(tmp), nil
+}
+
 func New(db *gorm.DB) reservations.ReservationData {
 	return &reservationQuery{
 		db: db,
