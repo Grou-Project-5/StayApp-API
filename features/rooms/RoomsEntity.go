@@ -8,6 +8,7 @@ type Core struct {
 	Price             int    `validate:"required"`
 	Description       string `validate:"required"`
 	Location          string `validate:"required"`
+	Availability      string
 	UserID            uint
 	UserName          string
 	MaxVisitors       int
@@ -25,17 +26,12 @@ type Core struct {
 	CheckOut          string
 	TakePhoto         string
 	Other             string
-	Pictures          []PictCore
-}
-
-type PictCore struct {
-	ID     uint
-	URL    string
-	RoomID uint
+	Pictures          string
+	RatingRoom        float64
 }
 
 type RoomService interface {
-	Add(newRoom Core) error
+	Add(newRoom Core, file *multipart.FileHeader) error
 	GetAll(page int, name string) ([]Core, error)
 	GetOne(id int) (Core, error)
 	Update(id int, updateRoom Core, file *multipart.FileHeader) error
