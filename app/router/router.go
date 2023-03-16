@@ -12,7 +12,7 @@ import (
 	_feedbackData "StayApp-API/features/feedback/data"
 	_feedbackHandler "StayApp-API/features/feedback/handler"
 	_feedbackService "StayApp-API/features/feedback/services"
-	
+
 	_reservationsData "StayApp-API/features/reservations/data"
 	_reservationsHandler "StayApp-API/features/reservations/handler"
 	_reservationsService "StayApp-API/features/reservations/services"
@@ -38,16 +38,16 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	roomSrv := _roomService.New(roomData)
 	roomHdl := _roomHandler.New(roomSrv)
 	e.POST("/rooms", roomHdl.Add, middlewares.JWTMiddleware())
-	e.GET("/rooms/", roomHdl.GetAll, middlewares.JWTMiddleware())
+	e.GET("/rooms", roomHdl.GetAll, middlewares.JWTMiddleware())
 	e.GET("/rooms/:id", roomHdl.GetOne, middlewares.JWTMiddleware())
 	e.PUT("/rooms/:id", roomHdl.Update, middlewares.JWTMiddleware())
 	e.DELETE("/rooms/:id", roomHdl.Delete, middlewares.JWTMiddleware())
-	
+
 	feedbackData := _feedbackData.New(db)
 	feedbackSrv := _feedbackService.New(feedbackData)
 	feedbackHdl := _feedbackHandler.New(feedbackSrv)
-	e.POST("/rooms/:id", feedbackHdl.Add, middlewares.JWTMiddleware())
-	e.GET("/rooms/:id", feedbackHdl.List)
+	e.POST("/room/:id", feedbackHdl.Add, middlewares.JWTMiddleware())
+	e.GET("/room/:id", feedbackHdl.List)
 
 	reservationsData := _reservationsData.New(db)
 	reservationsSrv := _reservationsService.New(reservationsData)

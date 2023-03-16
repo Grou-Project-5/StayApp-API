@@ -23,6 +23,7 @@ func New(srv rooms.RoomService) *RoomHandler {
 
 func (rm *RoomHandler) Add(c echo.Context) error {
 	addInput := RoomRequest{}
+	addInput.UserID = uint(middlewares.ExtractToken(c))
 	if err := c.Bind(&addInput); err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}
@@ -65,8 +66,8 @@ func (rm *RoomHandler) GetOne(c echo.Context) error {
 	if err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}
-	res := RoomResponse{}
-	copier.Copy(&res, &data)
+	res := CoreToGetAllRoomRespB(data)
+	// copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, " room profile successfully displayed", res))
 }
 
@@ -77,7 +78,7 @@ func (rm *RoomHandler) Update(c echo.Context) error {
 		return c.JSON(helper.ErrorResponse(err))
 	}
 	file, _ := c.FormFile("pictures")
-	
+
 	updateRoom := rooms.Core{}
 	copier.Copy(&updateRoom, &updateInput)
 	err := rm.srv.Update(roomID, updateRoom, file)
