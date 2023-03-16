@@ -34,7 +34,6 @@ func InitDBMySql(cfg config.AppConfig) *gorm.DB {
 func InitialMigration(db *gorm.DB) {
 	db.AutoMigrate(&users.User{})
 	db.AutoMigrate(&rooms.Room{})
-	db.AutoMigrate(&rooms.Pictures{})
 	db.AutoMigrate(&feedback.Feedback{})
 	db.AutoMigrate(&reservation.Reservation{})
 }
