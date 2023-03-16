@@ -26,3 +26,18 @@ func (rs *reservationService) Check(roomID int, startDate string, endDate string
 	}
 	return tmp, nil
 }
+
+
+// Add implements reservations.ReservationService
+func (rs *reservationService) Add(newReservation reservations.Core) error {
+	// Check input validation
+	errVld := rs.vld.Struct(newReservation)
+	if errVld != nil {
+		return errVld
+	}
+	err := rs.data.Add(newReservation)
+	if err != nil {
+		return err
+	}
+	return nil
+}
