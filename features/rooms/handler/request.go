@@ -5,6 +5,8 @@ type RoomRequest struct {
 	Price             int    `json:"price" form:"price"`
 	Description       string `json:"description" form:"description"`
 	Location          string `json:"location" form:"location"`
+	Availability      string `json:"availability" form:"availability"`
+	Pictures          string `json:"pictures" form:"pictures"`
 	MaxVisitors       int    `json:"max_visitors" form:"max_visitors"`
 	SpecialAccess     string `json:"special_access" form:"special_access"`
 	Bedroom           int    `json:"bedroom" form:"bedroom"`
