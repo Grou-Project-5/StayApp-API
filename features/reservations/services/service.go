@@ -37,19 +37,41 @@ func (rs *reservationService) Add(newReservation reservations.Core) (string, *sn
 	if errVld != nil {
 		return "", nil, errVld
 	}
-	
+	// cek ketersediaan kamar
 	tmp, _ := rs.data.Check(newReservation)
 	if !tmp {
 		return "", nil, errors.New("room not available")
 	}
+	// hitung total pembayaran
+	grossAmount := rs.data.GrossAmt(int(newReservation.RoomID), newReservation.Days)
+	// cek owner room
+	owner := rs.data.CheckOwner(int(newReservation.RoomID), int(newReservation.UserID))
+	if !owner {
+		return "", nil, errors.New("tidak bisa memesan kamar milik sendiri")
+	}
 
-	GrossAmount := rs.data.GrossAmt(int(newReservation.RoomID), newReservation.Days)
-
-	midtrans := helper.MidtransPay(newReservation.OrderID, GrossAmount)
-	newReservation.GrossAmount = GrossAmount
+	midtrans := helper.MidtransPay(newReservation.OrderID, grossAmount)
+	newReservation.GrossAmount = grossAmount
+	newReservation.RedirectUrl = midtrans.RedirectURL
 	err := rs.data.Add(newReservation)
 	if err != nil {
 		return "", nil, err
 	}
 	return newReservation.OrderID, midtrans, nil
+}
+
+// PayStatus implements reservations.ReservationService
+func (rs *reservationService) PayStatus(updatePayStatus reservations.Core) (reservations.Core, error) {
+	data, errStatus := helper.MidtransStatusPay(updatePayStatus.OrderID)
+	if errStatus != nil {
+		return reservations.Core{}, errStatus
+	}
+	if data.TransactionStatus == "settlement" {
+		updatePayStatus.StatusPayment = "success"
+	}
+	err := rs.data.PayStatus(updatePayStatus)
+	if err != nil {
+		return reservations.Core{}, err
+	}
+	return updatePayStatus, nil
 }

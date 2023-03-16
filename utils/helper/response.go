@@ -73,9 +73,12 @@ func ErrorResponse(err error) (int, interface{}) {
 	case strings.Contains(msg, "hashedPassword"):
 		resp["message"] = "password do not match"
 		code = http.StatusForbidden
-	// case strings.Contains(msg, "validation"):
-	// 	resp["message"] = ValidationError(err)
-	// 	code = http.StatusBadRequest
+	case strings.Contains(msg, "Transaction doesn't exist"):
+		resp["message"] = "transaction doesn't exist"
+		code = http.StatusNotFound
+	case strings.Contains(msg, "validation"):
+		resp["message"] = ValidationError(err)
+		code = http.StatusBadRequest
 	case strings.Contains(msg, "unmarshal"):
 		if strings.Contains(msg, "fullname") {
 			resp["message"] = "invalid fullname of type string"

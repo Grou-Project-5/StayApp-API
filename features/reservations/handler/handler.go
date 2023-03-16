@@ -55,7 +55,7 @@ func (rm *ReservationHandler) Add(c echo.Context) error {
 	starDate, _ := time.Parse("2006-01-02", newReservationInput.StartDate)
 	endDate, _ := time.Parse("2006-01-02", newReservationInput.EndDate)
 	newReservationInput.Days = int64((endDate.Sub(starDate).Hours() / 24) + 1)
-	
+
 	now := time.Now()
 	unixTimeNano := now.UnixNano()
 	newReservationInput.OrderID = "HAPP-" + strconv.FormatInt(unixTimeNano, 10)
@@ -71,4 +71,22 @@ func (rm *ReservationHandler) Add(c echo.Context) error {
 	res.OrderID = orderID
 	res.RedirectURL = data.RedirectURL
 	return c.JSON(helper.SuccessResponse(http.StatusOK, "reservation success, waiting for payment", res))
+}
+
+func (rm *ReservationHandler) PayStatus(c echo.Context) error {
+	updatePayInput := PayStatusRequest{}
+	if err := c.Bind(&updatePayInput); err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	updatePayStatus := reservations.Core{}
+	copier.Copy(&updatePayStatus, &updatePayInput)
+
+	data, err := rm.srv.PayStatus(updatePayStatus)
+	if err != nil {
+		return c.JSON(helper.ErrorResponse(err))
+	}
+	// convert dari Core ke PayStatusResponse
+	res := PayStatusResponse{}
+	copier.Copy(&res, &data)
+	return c.JSON(helper.SuccessResponse(http.StatusOK, "success display payment status", res))
 }

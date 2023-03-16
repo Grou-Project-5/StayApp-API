@@ -8,3 +8,7 @@ type ReservationRequest struct {
 	OrderID   string
 	Days      int64
 }
+
+type PayStatusRequest struct {
+	OrderID   string `json:"order_id"`
+}
