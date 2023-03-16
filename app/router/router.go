@@ -46,11 +46,12 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	feedbackData := _feedbackData.New(db)
 	feedbackSrv := _feedbackService.New(feedbackData)
 	feedbackHdl := _feedbackHandler.New(feedbackSrv)
-	e.POST("/room/:id", feedbackHdl.Add, middlewares.JWTMiddleware())
-	e.GET("/room/:id", feedbackHdl.List)
+	e.POST("/feedbacks/:id", feedbackHdl.Add, middlewares.JWTMiddleware())
+	e.GET("/feedbacks/:id", feedbackHdl.List)
 
 	reservationsData := _reservationsData.New(db)
 	reservationsSrv := _reservationsService.New(reservationsData)
 	reservationsHdl := _reservationsHandler.New(reservationsSrv)
 	e.POST("/check", reservationsHdl.Check)
+	e.POST("/reservation", reservationsHdl.Add, middlewares.JWTMiddleware())
 }
