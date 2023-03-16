@@ -59,7 +59,7 @@ func (rm *roomQuery) SelectOne(id uint) (rooms.Core, error) {
 func (rm *roomQuery) SelectAll(limit int, offset int, name string) ([]rooms.Core, error) {
 	nameSearch := "%" + name + "%"
 	var roomsModel []Room
-	tx := rm.db.Limit(limit).Offset(offset).Where("rooms.name LIKE ?", nameSearch).Select("rooms.id, rooms.name, rooms.price, rooms.description, rooms.location, users.name AS user_name, users.id AS user_id").Joins("JOIN users ON rooms.user_id = users.id").Find(&roomsModel)
+	tx := rm.db.Limit(limit).Offset(offset).Where("rooms.name LIKE ?", nameSearch).Select("rooms.id, rooms.name, rooms.price, rooms.pictures, rooms.availability, rooms.description, rooms.location, users.name AS user_name, AVG(feedbacks.rating) AS rating_room").Joins("JOIN users ON rooms.user_id = users.id").Joins("LEFT JOIN feedbacks ON rooms.id = feedbacks.room_id").Group("rooms.id").Find(&roomsModel)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}

@@ -27,9 +27,12 @@ func (rm *RoomHandler) Add(c echo.Context) error {
 	if err := c.Bind(&addInput); err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}
+	file, _ := c.FormFile("pictures")
+
 	newRoom := rooms.Core{}
 	copier.Copy(&newRoom, &addInput)
-	err := rm.srv.Add(newRoom)
+
+	err := rm.srv.Add(newRoom, file)
 	if err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}

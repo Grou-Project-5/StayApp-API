@@ -2,6 +2,7 @@ package services
 
 import (
 	"StayApp-API/features/rooms"
+	"StayApp-API/utils/helper"
 	"mime/multipart"
 
 	"github.com/go-playground/validator/v10"
@@ -29,7 +30,15 @@ func (srv *roomService) Delete(id int) error {
 }
 
 // Update implements rooms.RoomService
-func (srv *roomService) Update(id int, updateRoom rooms.Core, file *multipart.FileHeader) error {
+func (srv *roomService) Update(id int, updateRoom rooms.Core, fileHeader *multipart.FileHeader) error {
+	if fileHeader != nil {
+		file, _ := fileHeader.Open()
+		uploadURL, err := helper.UploadFile(file, "/rooms")
+		if err != nil {
+			return err
+		}
+		updateRoom.Pictures = uploadURL[0]
+	}
 	errUpdate := srv.data.Update(updateRoom, uint(id))
 	if errUpdate != nil {
 		return errUpdate
@@ -52,10 +61,18 @@ func (srv *roomService) GetAll(page int, name string) ([]rooms.Core, error) {
 }
 
 // Add implements rooms.RoomService
-func (srv *roomService) Add(newRoom rooms.Core) error {
+func (srv *roomService) Add(newRoom rooms.Core, fileHeader *multipart.FileHeader) error {
 	errValidate := srv.validate.Struct(newRoom)
 	if errValidate != nil {
 		return errValidate
+	}
+	if fileHeader != nil {
+		file, _ := fileHeader.Open()
+		uploadURL, err := helper.UploadFile(file, "/rooms")
+		if err != nil {
+			return err
+		}
+		newRoom.Pictures = uploadURL[0]
 	}
 	errInsert := srv.data.Insert(newRoom)
 	if errInsert != nil {
