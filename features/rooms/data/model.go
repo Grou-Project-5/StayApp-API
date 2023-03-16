@@ -15,6 +15,7 @@ type Room struct {
 	Price             int
 	Description       string
 	Location          string
+	Availability      string `gorm:"default:Available"`
 	UserName          string
 	MaxVisitors       int
 	SpecialAccess     string
@@ -31,15 +32,10 @@ type Room struct {
 	CheckOut          string
 	TakePhoto         string
 	Other             string
-	Pictures          []Pictures
+	Pictures          string
+	RatingRoom        float64
 	Feedback          []modelFeedback.Feedback
-	Reservation				[]modelReservation.Reservation
-}
-
-type Pictures struct {
-	gorm.Model
-	URL    string
-	RoomID uint
+	Reservation       []modelReservation.Reservation
 }
 
 func CoreToRoom(data rooms.Core) Room {
@@ -66,7 +62,9 @@ func CoreToRoom(data rooms.Core) Room {
 		CheckOut:          data.CheckOut,
 		TakePhoto:         data.TakePhoto,
 		Other:             data.Other,
-		Pictures:          []Pictures{},
+		Pictures:          data.Pictures,
+		RatingRoom:        data.RatingRoom,
+		Availability:      data.Availability,
 	}
 }
 
@@ -94,7 +92,9 @@ func RoomToCore(data Room) rooms.Core {
 		CheckOut:          data.CheckOut,
 		TakePhoto:         data.TakePhoto,
 		Other:             data.Other,
-		Pictures:          []rooms.PictCore{},
+		Pictures:          data.Pictures,
+		RatingRoom:        data.RatingRoom,
+		Availability:      data.Availability,
 	}
 }
 
