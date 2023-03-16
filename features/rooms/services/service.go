@@ -20,6 +20,14 @@ func New(repo rooms.RoomData) rooms.RoomService {
 	}
 }
 
+// GetAllRoomUser implements rooms.RoomService
+func (srv *roomService) GetAllRoomUser(userid int, page int) ([]rooms.Core, error) {
+	limit := 10
+	offset := (page - 1) * limit
+	data, err := srv.data.SelectAllRoomUser(userid, limit, offset)
+	return data, err
+}
+
 // Delete implements rooms.RoomService
 func (srv *roomService) Delete(userid int, id int) error {
 	errDelete := srv.data.Delete(userid, id)

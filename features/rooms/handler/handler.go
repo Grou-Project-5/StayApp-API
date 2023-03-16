@@ -109,3 +109,25 @@ func (rm *RoomHandler) Delete(c echo.Context) error {
 	}
 	return c.JSON(helper.SuccessResponse(http.StatusOK, "room successfully displayed"))
 }
+
+func (rm *RoomHandler) GetAllRoomUser(c echo.Context) error {
+	userID := int(middlewares.ExtractToken(c))
+	var pageNumber int = 1
+	pageParam := c.QueryParam("page")
+	if pageParam != "" {
+		pageConv, errConv := strconv.Atoi(pageParam)
+		if errConv != nil {
+			return c.JSON(http.StatusInternalServerError, helper.Response("Failed, page must number"))
+		} else {
+			pageNumber = pageConv
+		}
+	}
+
+	// nameParam := c.QueryParam("name")
+	data, err := rm.srv.GetAllRoomUser(userID, pageNumber)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Response("Failed, error read data"))
+	}
+	dataResponse := CoreToGetAllRoomResp(data)
+	return c.JSON(http.StatusOK, helper.ResponseWithData("Success", dataResponse))
+}

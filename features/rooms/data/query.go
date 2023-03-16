@@ -17,6 +17,18 @@ func New(db *gorm.DB) rooms.RoomData {
 	}
 }
 
+// SelectAllRoomUser implements rooms.RoomData
+func (rm *roomQuery) SelectAllRoomUser(userid int, limit int, offset int) ([]rooms.Core, error) {
+	// nameSearch := "%" + name + "%"
+	var roomsModel []Room
+	tx := rm.db.Limit(limit).Offset(offset).Where("user_id = ?", userid).Find(&roomsModel)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	roomsCoreAll := ListModelToCore(roomsModel)
+	return roomsCoreAll, nil
+}
+
 // Delete implements rooms.RoomData
 func (rm *roomQuery) Delete(userid int, id int) error {
 	tx := rm.db.Where("user_id = ?", userid).Delete(&Room{}, id)
