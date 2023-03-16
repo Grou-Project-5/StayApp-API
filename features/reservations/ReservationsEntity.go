@@ -6,6 +6,7 @@ type Core struct {
 	ID            uint
 	UserID        uint
 	RoomID        uint   `validate:"required"`
+	RoomName      string
 	StartDate     string `validate:"required"`
 	EndDate       string `validate:"required"`
 	PaymentMethod string
@@ -21,6 +22,7 @@ type ReservationService interface {
 	Check(checkAvailability Core) (bool, error)
 	Add(newReservation Core) (string, *snap.Response, error)
 	PayStatus(updatePayStatus Core) (Core, error)
+	History(userID int) ([]Core, error)
 }
 
 type ReservationData interface {
@@ -29,4 +31,5 @@ type ReservationData interface {
 	CheckOwner(roomID, userID int) bool
 	Add(newReservation Core) error
 	PayStatus(updatePayStatus Core) error
+	History(userID int) ([]Core, error)
 }
