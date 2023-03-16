@@ -69,9 +69,9 @@ func (rm *RoomHandler) GetOne(c echo.Context) error {
 	if err != nil {
 		return c.JSON(helper.ErrorResponse(err))
 	}
-	res := CoreToGetAllRoomRespB(data)
+	res := GetOneRoomResponse{}
 
-	// copier.Copy(&res, &data)
+	copier.Copy(&res, &data)
 	return c.JSON(helper.SuccessResponse(http.StatusOK, " room profile successfully displayed", res))
 }
 
@@ -128,6 +128,6 @@ func (rm *RoomHandler) GetAllRoomUser(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.Response("Failed, error read data"))
 	}
-	dataResponse := CoreToGetAllRoomResp(data)
+	dataResponse := CoreToGetAllRoomByIdResp(data)
 	return c.JSON(http.StatusOK, helper.ResponseWithData("Success", dataResponse))
 }
