@@ -758,12 +758,12 @@ paths:
           $ref: "#/components/responses/400"
         500:
           $ref: "#/components/responses/500"
-  /reservations/check:
+  /check:
     post:
       tags:
         - Reservations
-      summary: "Create Reservation"
-      description: "Create New Reservation"
+      summary: "Cek Ketersediaan"
+      description: "Cek Ketersediaan"
       security:
         - JWTAuth: []
       requestBody:
@@ -785,17 +785,15 @@ paths:
               date_end: "2023-03-17"
       responses:
         201:
-          description: "success check reservation"
+          description: "success"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/responseObject"
               example:
                 data:
-                  room_id: 1
-                  date_start: "2023-03-13"
-                  date_end: "2023-03-17"
-                message: "success check reservation"
+                  availability: true
+                message: "room available"
         400:
           $ref: "#/components/responses/400"
         500:
@@ -818,26 +816,60 @@ paths:
               room_id: 1
               start_data: "2023-03-15"
               end_date: "2023-03-17"
-              order_id: 2
-              days: 3
       responses:
         200:
-          description: "success create reservation"
+          description: "success"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/responseObject"
               example:
-                message: "success create reservation"
+                data:
+                  order_id: "HAPP-1679023702077060300"
+                  redirect_url: "https://app.sandbox.midtrans.com/snap/v3/redirection/a7cd4588-1853-43a5-b23a-80fb26d161ff"
+                message: "reservation success, waiting for payment"
         400:
           $ref: "#/components/responses/400"
         500:
           $ref: "#/components/responses/500"
+  /paystatus:
+    post:
+      tags:
+        - Reservations
+      summary: "Payment Status"
+      description: "Cek status pembayaran di Modtrans"
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reservation"
+            example:
+              order_id: "HAPP-1678981182881336700"
+      responses:
+        200:
+          description: "success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  order_id: "HAPP-1678981182881336700"
+                  payment_status: "success"
+                message: "reservation success, waiting for payment"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+  /history:
     get:
       tags:
         - Reservations
-      summary: "Get all data reservation from user"
-      description: "get all your data reservation"
+      summary: "History Reservation"
+      description: "Menampilan riwayat reservasi user"
       security:
         - JWTAuth: []
       responses:
@@ -849,20 +881,18 @@ paths:
                 $ref: "#/components/schemas/responseObject"
               example:
                 data:
-                  - room_id: 1
-                    room_name: "Kimi Homestay"
-                    start_date: "2023-03-15"
-                    end_date: "2023-03-17"
-                    gross_ammount: 2500000
-                    order_id: 1
-                    status_payment: ""
-                  - room_id: 1
-                    room_name: "Kimi Homestay"
-                    start_date: "2023-03-15"
-                    end_date: "2023-03-17"
-                    gross_ammount: 2500000
-                    order_id: 1
-                    status_payment: ""
+                  - room_name: "Kamar Mewah"
+                    start_date: "2023-04-10"
+                    end_date: "2023-04-14"
+                    gross_amount: 1000000
+                    order_id: "HAPP-1678981182881336700"
+                    status_payment: "Pending"
+                  - room_name: "Kamar Sederhana"
+                    start_date: "2023-04-10"
+                    end_date: "2023-04-14"
+                    gross_amount": 1250000
+                    order_id: "HAPP-1678981303829361500"
+                    status_payment: "Success"
                 message: "sucess get user reservation"
         400:
           $ref: "#/components/responses/400"
@@ -872,7 +902,7 @@ paths:
     post:
       tags:
         - Feedbacks
-      summary: create feedback
+      summary: Add Feedback
       description: create feedback
       security:
         - JWTAuth: []
@@ -884,7 +914,7 @@ paths:
               $ref: "#/components/schemas/Feedback"
             example:
               room_id: 1
-              rating: "*****"
+              rating: 4
               feedback: "sangat nyaman dan memuaskan"
       responses:
         201:
@@ -898,6 +928,44 @@ paths:
                     type: string
               example:
                 message: "success add feedback"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+  /rooms/{id}/feedbacks:
+    get:
+      tags:
+        - Feedbacks
+      summary: "Menampilkan Feedback"
+      description: "Menampilan feedback berdasarkan kamar"
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  - id: 7
+                    user_name: "Leman"
+                    rating: 5
+                    comment: "Seperti tanpa kaca"
+                    created_at: "March 2023"
+                  - id: 8,
+                    user_name: "Putri"
+                    rating: 4
+                    comment: "Seperti tanpa kaca"
+                    created_at: "March 2023"
+                message: "sucess get user reservation"
         400:
           $ref: "#/components/responses/400"
         500:

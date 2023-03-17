@@ -3,7 +3,7 @@
 
 ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
-##
+## Description
 
 StayApp adalah aplikasi yang dapat membantu Anda menemukan penginapan yang sesuai dengan kebutuhan dan budget. Dengan StayApp, Anda dapat dengan mudah mencari dan memesan penginapan yang diinginkan dengan hanya beberapa klik. StayApp menyediakan berbagai pilihan homestay yang berkualitas dan terpercaya, sehingga Anda dapat merasa nyaman dan aman selama tinggal di homestay tersebut.
 
