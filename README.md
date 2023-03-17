@@ -32,4 +32,4 @@ StayApp adalah aplikasi yang dapat membantu Anda menemukan penginapan yang sesua
 
 ### Database Schema
 
-![ERD]([https://raw.githubusercontent.com/Grou-Project-5/StayApp-API/main/images/ERD.jpg](https://raw.githubusercontent.com/Grou-Project-5/StayApp-API/main/images/ERD%20(1).jpg))
+![ERD](https://raw.githubusercontent.com/Grou-Project-5/StayApp-API/main/images/ERD%20(1).jpg)
