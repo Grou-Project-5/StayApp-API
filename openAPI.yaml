@@ -764,8 +764,6 @@ paths:
         - Reservations
       summary: "Cek Ketersediaan"
       description: "Cek Ketersediaan"
-      security:
-        - JWTAuth: []
       requestBody:
         required: true
         content:
@@ -838,8 +836,6 @@ paths:
         - Reservations
       summary: "Payment Status"
       description: "Cek status pembayaran di Modtrans"
-      security:
-        - JWTAuth: []
       requestBody:
         required: true
         content:
