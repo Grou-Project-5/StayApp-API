@@ -351,23 +351,21 @@ paths:
                   [
                     {
                       id: 1,
-                      "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
-                      "user_id": 1,
-                      "room_name": "Kimi Homestay",
+                      "name": "Kimi Homestay",
                       "price": 250000,
-                      "special_access": "string",
-                      "location": "Malang",
-                      "stats": "Available",
+                      "description": "sangat nyaman",
+                      "picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      "rating_room": 4,                   
+                      "availability": "Available",
                     },
                     {
                       id: 2,
-                      "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
-                      "user_id": 2,
-                      "room_name": "Ken's Homestay",
+                      "name": "Kimi2 Homestay",
                       "price": 250000,
-                      "special_access": "string",
-                      "location": "Batu",
-                      "stats": "Not Available",
+                      "description": "sangat nyaman",
+                      "picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      "rating_room": 4,                   
+                      "availability": "Available",
                     },
                   ]
                 message: "success show all room"
@@ -389,10 +387,7 @@ paths:
             schema:
               type: object
               properties:
-                room_picture:
-                  type: string
-                  format: binary
-                room_name:
+                name:
                   type: string
                   description: Room name
                 price:
@@ -404,6 +399,12 @@ paths:
                 location:
                   type: string
                   description: location
+                availability:
+                  type: string
+                  description: location
+                picture:
+                  type: string
+                  format: binary
                 max_visitors:
                   type: integer
                   description: max visitors
@@ -413,9 +414,9 @@ paths:
                 bedroom:
                   type: integer
                   description: bedroom
-                room:
+                room_total:
                   type: integer
-                  description: room
+                  description: room total
                 kitchen:
                   type: string
                   description: kitchen
@@ -449,17 +450,20 @@ paths:
                 other:
                   type: string
                   description: other rules
+                user_phone:
+                  type: string
+                  description: string
             example:
-              room_picture: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
-              user_id: 1
-              room_name: "Villa Bali Green"
+              name: "Villa Bali Green"
               price: 250000
               description: "string"
               location: "Malang Jawa Timur"
+              availability: "Available"
+              room_picture: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
               max_visitors: 7
               special_access: "string"
               bedroom: 3
-              room: 2
+              room_total: 2
               kitchen: "string"
               wifi: "string"
               garage: "string"
@@ -471,6 +475,7 @@ paths:
               check_out: "string"
               take_photo: "string"
               other: "string"
+              user_phone: "0812345"
 
       responses:
         201:
@@ -513,16 +518,14 @@ paths:
               example:
                 data:
                   id: 1
-                  "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
-                  "user_id": 1
-                  "room_name": "Villa Bali Green"
+                  "name": "Villa Bali Green"
                   "price": 250000
                   "description": "string"
                   "location": "Malang Jawa Timur"
                   "max_visitors": 7
                   "special_access": "string"
                   "bedroom": 3
-                  "room": 2
+                  "room_total": 2
                   "kitchen": "string"
                   "wifi": "string"
                   "garage": "string"
@@ -534,6 +537,8 @@ paths:
                   "check_out": "string"
                   "take_photo": "string"
                   "other": "string"
+                  "user_phone": "08132"
+                  "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
                 message: "success get room details"
         400:
           $ref: "#/components/responses/400"
@@ -562,10 +567,7 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
-                  type: integer
-                  description: ID from user
-                room_name:
+                name:
                   type: string
                   description: Room name
                 price:
@@ -577,6 +579,12 @@ paths:
                 location:
                   type: string
                   description: location
+                availability:
+                  type: string
+                  description: location
+                picture:
+                  type: string
+                  format: binary
                 max_visitors:
                   type: integer
                   description: max visitors
@@ -586,9 +594,9 @@ paths:
                 bedroom:
                   type: integer
                   description: bedroom
-                room:
+                room_total:
                   type: integer
-                  description: room
+                  description: room total
                 kitchen:
                   type: string
                   description: kitchen
@@ -622,6 +630,9 @@ paths:
                 other:
                   type: string
                   description: other rules
+                user_phone:
+                  type: string
+                  description: string
       responses:
         200:
           description: success update room
@@ -632,16 +643,14 @@ paths:
               example:
                 data:
                   id: 1
-                  "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
-                  "user_id": 1
-                  "room_name": "Villa Bali Green"
+                  "name": "Villa Bali Green"
                   "price": 250000
                   "description": "string"
                   "location": "Malang Jawa Timur"
                   "max_visitors": 7
                   "special_access": "string"
                   "bedroom": 3
-                  "room": 2
+                  "room_total": 2
                   "kitchen": "string"
                   "wifi": "string"
                   "garage": "string"
@@ -653,6 +662,8 @@ paths:
                   "check_out": "string"
                   "take_photo": "string"
                   "other": "string"
+                  "user_phone": "08132"
+                  "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
                 message: "success update room"
         400:
           $ref: "#/components/responses/400"
@@ -723,21 +734,23 @@ paths:
                   [
                     {
                       "id": 1,
-                      "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
-                      "user_id": 1,
-                      "room_name": "Kimi Homestay",
+                      "name": "Kimi Homestay",
                       "price": 250000,
                       "description": "string",
                       "location": "Malang Jawa Timur",
+                      "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      "rating_room": 4,
+                      "availability": "Available",
                     },
                     {
                       "id": 2,
-                      "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
-                      "user_id": 1,
-                      "room_name": "Kimi2 Homestay",
-                      "price": 250000,
+                      "name": "Kimi2 Homestay",
+                      "price": 350000,
                       "description": "string",
-                      "location": "Batu Jawa Timur",
+                      "location": "Malang Jawa Timur",
+                      "room_picture": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      "rating_room": 4,
+                      "availability": "Available",
                     },
                   ]
                 message: "success get all user room"
@@ -803,15 +816,10 @@ paths:
               $ref: "#/components/schemas/Reservation"
             example:
               room_id: 1
-              date_start: "2023-03-15"
-              date_end: "2023-03-17"
-              duration: 2
-              total_price: 4000000
-              name: "yuda"
-              card_number: "0230 4321 9518 6659"
-              cvv: "889"
-              month: "mei"
-              year: "2024"
+              start_data: "2023-03-15"
+              end_date: "2023-03-17"
+              order_id: 2
+              days: 3
       responses:
         200:
           description: "success create reservation"
@@ -843,16 +851,18 @@ paths:
                 data:
                   - room_id: 1
                     room_name: "Kimi Homestay"
-                    date_start: "2023-03-15"
-                    date_end: "2023-03-17"
-                    address: "Malang"
-                    total_price: 4000000
+                    start_date: "2023-03-15"
+                    end_date: "2023-03-17"
+                    gross_ammount: 2500000
+                    order_id: 1
+                    status_payment: ""
                   - room_id: 1
                     room_name: "Kimi Homestay"
-                    date_start: "2023-03-15"
-                    date_end: "2023-03-17"
-                    address: "Malang"
-                    total_price: 4000000
+                    start_date: "2023-03-15"
+                    end_date: "2023-03-17"
+                    gross_ammount: 2500000
+                    order_id: 1
+                    status_payment: ""
                 message: "sucess get user reservation"
         400:
           $ref: "#/components/responses/400"
